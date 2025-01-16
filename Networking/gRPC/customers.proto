@@ -1,0 +1,34 @@
+// This .proto file is called IDL/ProtoBuf
+syntax = 'proto3';
+
+
+service CustomerService = {
+    // Define all procedures (methods) inside the service
+
+    rpc GetAll (Empty) return (CustomerList) {}
+    rpc Get (CustomerRequestId) return (Customer) {}
+    rpc Insert (Customer) return (Customer) {}
+    rpc Update (Customer) return (Customer) {}
+    rpc Remove (CustomerRequestId) return (Empty) {}
+}
+
+// Now to define types, use message instead of type (like in GraphQL)
+
+message Empty {}
+
+message CustomerRequestId {
+    // Assign sequence numbers so that ProtoBuf will understand all the data in a sequence and the the Serialization/Deserialization will be faster. And do not change these values often. Keep them constant.
+    
+    string id = 1;
+}
+
+message CustomerList {
+    repeated Customer customers = 1;
+}
+
+message Customer {
+    string id = 1;
+    string name = 2;
+    int32 age = 3;
+    string address = 4;
+}

@@ -1,0 +1,462 @@
+===================
+How the Web Works?
+===================
+Server => Even you latop/system can be a server. Server is nothing but a machine which can process some request and respond you some data.
+          But our local server is not reliable as it can shut down any time. Has less memory space, CPU, RAM. So we take big server which is available 24/7.
+
+IP Address => Lets take an example of you ordering a pizza from Dominos. When you call the dominos person for giving order, first they will ask you after taking order 
+              is you address. That is pincode. Based on that they will get to know nearby Dominos and they can deliver it.
+              Similarly web also has something called IP Address. Every devices that wants to interact with other device should have IP Address. Like using IOT if you 
+              want to turn of your fan at home sitting at office, you are able to do it through IP Address. (IP Address: 152.222.122)
+
+Domain Name => Its a name given to IP Address to remember easily.
+
+[IMG:1]
+When you search Google.come from Phone -> Cell tower -> Phone Company -> DNS (Domain Name System, which return the IP address back to phone)
+Now using IP address cell towers will know which server to send the request to. Phone -> Cell tower -> Phone Company -> Site (Server, takes the request and return the response, basically htmk, css, js)
+
+[IMG:2]
+In more deeper level, we previously using LAN connections (Telephone lines) connected to computer for internet. Basically there will be ISP (Internet Service Provider) like
+BSNL, ACT Fibrenet etc.. which provides you a Telephone line, whichis connected to Modem and from Modem there is a connection to Router, and Router to computer.
+So this ISPs like BSNL,ACT Fibrenet are responsible to take the request from the computer and interact with the internet to pass the request and get the response from right Server
+
+Internet -> ISP (BSNL, ACT Fibernet) -> Modem -> Router -> Computer
+
+[IMG:3]
+How the internet comes to your system - To access data from other systems you need internet through wifi or LANs. Suppose there is no wifi and if every device is connected by only LAN wires,
+it will be a mess. So smart way is to use both wire and wireless smartly. In our apartment at top we have a main route which takes the internet and passes it to flat routers through Wire.
+From flat router we get wifi. Not to ther aprtment main Router, there cannot be direct connection from ISP. There will be some ceteral router hub in a society to which there will be wire connection from ISP.
+From that hub there will be wire connections to our apartments. from our apartment to flats through wire. Else if it wireless than entire aparment cannot get proper signals through wifi from one place.
+
+[IMG:4]
+DNS => DNS is also a combination of multiple servers
+       There are 4 stages in DNS
+       1. Root domain - '.'
+       2. Top-level domain - edu,org,gov,com,au   => Using this DNS will know which server to dig in
+       3. Second-level domain - openoffice.org, microsoft.com   => Using this DNS will know about another server on which to dig deep in
+       4. Third-level domain - www.expedia.gov, download.microsoft.com, sales.microsoft.com
+
+       ICANN => This is a Governed Authority, which decided about all these different levels of domains and their mapping to IP Address.
+       WHOIS Privacy Protection => When there is a Domain out there on Net, people can search this domain name on WHOIS platfor to all the information like who created, email, address etc.. here. But you can configure to keep these private.
+
+[IMG:5]
+Server => Its a huge Data Center (set of onlu CPUs/Machines) which is full of CPU filled with RAM, memory and data backups. Now using the IP Address it will exactly know which machine to target and get data from.
+          All the backend code is deployed in these servers and thats how based on a specific path we are able to getting right data as defined in our backend code. And all load balancing and all takes place here.
+          Lets say these Data centers are there in California. Sitting in India if you need to get data from califronia, one way is to get data through Satilite which is mles away. Instead of this there are
+          Optical fibers spread acrross oceans which is how we all are able to access internet even from different countries.
+
+[IMG:6]
+ISP => There are different types of ISPs like 
+       1. Local ISPs - Which connects neighbourhood
+       2. Regional ISPs - Which connects cities in a country
+       3. Global ISPs - Which connects countries
+       Here, if we want to retrict any sites or any data government will come it into picture and stop that. This happens at Regional and Global ISPs
+       Mobile(In India)  --(Request data / Search something)--->  Local ISP -->  Regional ISP -->  Global ISP --> Regional ISP (In USA) --> Local ISP (In USA) --> Data center (In USA)
+       Now from the data centers data wont come as a single parce;. Data will will splitted into bulks/parts and comes to us through different ISPs and gets assembled into one before they reach our mobile/laptop.
+
+[IMG:7][IMG:8]
+Let dive deeper into Browser.
+
+Browser => When you request something from Browser, before hitting the router, it first check the 'Cache, Service Workers' in the browser and next 'Operating Systen' and next 'Router' and the 'ISP'.
+           When the status code is 304, that means data is already present and get it from cache. 
+           **NOTE: A maximum of 6-8 parallel calls can be made depending on the browser. Remaining will be queued which can be scene in network tab
+           Operating System caching: You can modify the host file (localhost) to point to the Google server / Any other development server.
+           Nowadays even Routers are caching data like host information like Operating System
+
+
+Peering => When you search a URL in Google, instead of travelling acrross countries to reach California data center, Google keeps data centers in your Region only. So When you request something, 
+           it won't even go tille Regional ISP, it just goes to local ISP and to the Local Data Center to give you the data.
+           Netflix took it to another level. For faster streaming of videos, Netflix have asked REgional ISP to provide hosting platform to store data, so that users can direct
+           request from here instead of pasing through all those Reagional and Global ISP to reach far away data centers. Even regional ISP store datas at local ISPs based on the traffic at certain regions to further
+           improve the speed.
+
+
+[IMG:9]
+TCP Handshake => Its a 3 way request. Before sending real request, first it will send a sync / acknowledgment request to the server to see if its available for real request to get actual data. Then server acknowledges back assigning a number. The again an acknowledgment is sent to the server with the assigned sequence number. So that when sending real request if any data misses it will send those packets again. Before every request it will make a TCP connection everytime.
+
+[IMG:10][IMG:11]
+SSL Handshake => If it's a HTTPS request, then there is another addiotional security related request (to tell the server that it's a secure request) sent after TCP to exchange the certifcate/client key, which will be used to encrypt data before sending to serer for next sequence of calls 
+                 so that no middle can understand what is communicated between client and server. Server will use this Client Key to decrypt the incomming encrypted request data and sends the response (HTML, CSS, JS, IMGs...) back to the client.
+
+
+Actual sequence of calls:
+1. DNS
+2. TCP Handshake
+3. SSL Handshake
+4. HTTPS Get request
+Note: Initial response (HTML, CSS, JS) should be not more than 14kb, so that there will be atleast something to show to user instead of keeping him wait for so long. Next request can be lil more like 28kb next and next one be upto 56kb and so on.
+
+
+[IMG:12-21]
+Now when you receive the HTML what happens is, there are basically 4 steps:
+1. Loading (Loading and Parsing )
+2. Scripting (JS Execution)
+3. Rendering (Build Render tree and Layout Tree)
+4. Painting (Paint tree and Compositing)
+When browser receives the HTML page there are CSS and JS files it it. It goes line by line and loads CSS (Render blocking) ad JS (Parser blocking) and by parsing the entire HTML file like this it will create a DOM tree.
+After this CSS will also parse the loaded CSS file and creates CSSOM tree will all the css properties of element at their every node. No both DOM and CSSOM will merge into one giving a Render tree
+DOM + CSSOM = Render tree
+Render tree is the final output with all Elmenets and their final css properties (elemenating the repeated CSS through specificity and also after executing JS file to eleminate/show few elements). After Render tree there are three steps, 1.Layout 2.Paint 3.Compositing. After Render tree is created a Layout tree (Skeleton) will be created from it which calculated all the dimanetions layouts and all to show the elemetns in browser.
+And after this Layout tree a Pain tree will be created which paints the browser with all the CSS styles and then at last different layars will be created on which element to show at top and which should be below on screen based on z-index, which is called Compositing.
+NOTE: In elements tab under 'Styles' section you can see all the CSS inlcluding the repeated ones. But under 'Computed' section, you can see the final CSS styles that got applied after applying specificity.
+NOTE: CSS is Render blocking and JS is Parser blocking. That means when the HTML parser reaches JS parser blocking script tag (which can be manipulated using defer and async), it will pause the HTML parser execution until all JS code is executed and fetched.
+
+Now when we say JS script execution => Script loads and then parses it (as JS is single threaded, while its parsing a script file it halts/stops the other execution until this is completed) and then creates a AST tree initialization (structure and flow of code) and then compiles it to Bytecode that machine understands and then executed it.
+That is, JS --(pareses)--> AST tree --(compile)--> Byte/Machine code --> Excecution
+
+1. Loading: HTML file loaded --(parser)--> DOM --> CSS file loaded --(parser)--> CSSOM --> 2. Scripting: JS file loaded --> JS Parsed and executed --> 3. Rendering: Merge DOM & CSSOM to Render Tree --> Layout Tree --> 4. Painting: Paint tree --> Compositing
+
+
+
+[IMG:22-24]
+Protocols:
+..........
+HTTP - It is one of the mother tongue to communicate between two system. It uses TCP connection, which is reliable and makes sure none of the data packet is lost. It is used in Web browsing and Emails
+HTTP/3 (QUIC) - It is much faster because ther is no TCP. It uses UDP connection that menas it will directly request data without TCP and is not concerned about lossing data in between. It is jus tlike leaving courier at door step and going. TCP is like taking OTP and the confirmation. UDP is used in Voice messages, video conferences etc..HTTP/3 is used by google and youtube. It is used in IOT and Virtual Reality. It does Header compression, better Network Conjestion, faster.
+HTTPS - More secure. Along with TCP it does one more connection - SSL and TLS (Transport Layer Security). Encryption and descryption are done at both Client and Server end using a ppublic key given by server. We use this in Web Browsing.
+WebSocket - It uses HTTP updarade, that is first makes HTTP call and converts it to WebSocket connection. This is called Full Duplex, which is a single Live connection. No new connections are formed and this connection is live always. Either CLient or Server can communicate data through this single live connection. Used for live hcat, Analytics dashboards, Live data streaming, comments section, likes etc..
+SMTP - Whatever mails that you are getting, you are getting through SMTP Protocol via SMTP Server. Sender ----> SMTP SERVER --(multiple people because it knows how to target using SMTP Protocol)--> Receiver
+FTP - File Transfer Protocol. When there are huge file that are to be transfered/downloaded, you use FTP Protocol. You can use various other techniques like streaming data using HTTPS and converting into binary data but FTP is much faster. Used in application where you upload file to convert to different forms (png/pdf), also used at applicatioin where you need to transfer huge files from one system to another.
+TCP
+UDP
+
+
+============================================================================
+REST API (Representaional State Transfer - Application Programming Interface)
+============================================================================
+
+History:
+1. 1-Tier Architecture => This is where everything at one place (Backend,Frontend,Storage etc..) When we hit the URL, through the IP Address, we used to get that HTML page.
+2. 2-Tier Architecture => This is where Frontend is seperated from (Backend and Storage) as 2 seperate Web service. Now to communicate between these 2 web services, there are many ways and most commonly used way is REST API.
+3. 3-Tier Architecture => This is where Frontend, Backend and Storage and seperated into 3 different services and interact with each other through REST API. Now there can be many more services that are involved like Payment Gateways, Emails, Cloud Storages which Backend interacts, which leads to an N-Tier Architecture.
+
+API - Helps to interact with these different Web services. If you want to make two programming languages talk to each other, you use an API.
+HTTP - Hypertext Transfer Protocol. It is basically a path that defines the fundamentals on the WEB, how the data should be exchanged (like in what format etc..) between two services.
+REST - As the name says, how your data should be Represented during this transfer is decided by the REST. REST is built on top of HTTP. It provides set of rules to built an API. REST internally uses HTTP to communicate data with server.
+
+
+Benefits of REST:
+1. Ease of use
+2. Stateless => Doesen't mantain any state. Everytime for every request you need to come up with the cookies, authenticators, IP Address etc.. REST dosen't maintain the state if requested once.
+3. Scalability => As it dosent maintain any state. it is easy to scale
+4. Flexibility with Data => JSON/XML
+5. Uniform Interface => Standard way to read the URL/URI (path, domain, hash, queries etc..) 
+6. Caching
+7. Seperation of Concerns => Frontend can be Javascript and backend cna be Java,Python,Golang..
+8. Interoperability - Language agnostic
+9. Ease of testing
+10. Security - HTTPS and Authentication headers
+
+
+[IMG:25]
+REST API - Request/Response headers
+
+
+[IMG:26]
+
+URL
+...
+A server consists of multiple applications. When you request something, you need to let server know exactly which application, which code and which part of the code(paths/query params) has the information you are requesting.
+https://www.example.com/forum/questions/?tag=networking&order=1#top
+URL Parts:
+1. Scheme: http/https
+2. Host - www.google.com => Contains all the information to reach to the right server       
+       1. TLD(Top level domain) - com/in
+       2. Domain - google/namaste 
+       3. Subdomain - www/course/namaste
+3. Path/Route (Subdirectory) - /forum/questions => Once you reached the server, to dig deep into the server you need path, which lets you know, exactly which part of the code / which folder that you need to further dig in, that needs to be executed. Mostly these are not folders, these are dynamic paths which are configured in Server.
+(Till this step it is all about reaching to the right function, which is to be executed)
+4. Query string / Query Param (One way to pass some information to the server) - ?tag=networking&order=1 => Key=Value pairs and the pairs are seperated by '&'.
+5. Fragment / Hash - #top => **NOTE** This hash, does not go to the server. Is is used in the client side to pass some information when you are sharing the URL with others. Like to point to the exact section in a particular page if it's a huge page. You do this by giving an id to that sectiona and pointing the hash to that id.
+
+Good practice - Anything that is an api just be prefixed with /api before the paths. Ex: http://localhost:5111/api/users
+
+
+[SEE CODE]
+
+CRUD (Create,Read,Update,Delete)
+................................
+Main Methods:
+.............
+GET
+POST
+PUT/PATCH - Lets say there is a Profile object and uyou just want to update name in it. PUT method is used when you need to send the entire object data again with updated name value. PATCH method is used when you send only the updated name and server is taking care to update the object with the name change.
+DELETE
+
+Other Methods:
+..............
+HEAD - If you dont want to perform any operation and just need the info about the headers that I will be receiving. This is used just to verify if the header modification is happening in server or not.
+OPTIONS - This is used for the security purpose. When you are accessing a different domain than before making the actual call, it will first make an OPTIONS call to check if it is allowed to access that domain or not.
+CONNECT - It is used to establish a connection. When you make a request to the server few Handshake calls happen to establish the connection. And using this CONNECT you can establish that connection and from next requests it will be faster. This will get rid of that extra connection calls.
+TRACE - This is used for tracing/diagnosis purpose which evaluates the request and response. This is generally not used in Production as there can be chances for data leaks.
+
+**NOTE:**
+- You can exchange data between two services in only serialized form. That is into a bytestream. So if there is any object we convert it to JSON.stringify({}) (text based serialization) before sending it to server.
+  Generally in HTTP requests we do Text based serialization (that is, strings) for objects to transmit data. If it is an image/video we serialize in a different way using blob,Arraybuffer,base64 encoding etc..
+- When we are using browser, the request that we are making from URL is by default always a GET request
+- We can have same paths with different methods (GET/POST..) in case of REST
+[IMG-27]
+- While updating an object using PUT method, to identify which object to be updated, Standard way to do that is, we send an id param in the URL itself - /todos/:id
+
+
+[IMG:28-29]
+Request Headers
+...............
+Host => www.example.com => (Target host) Specifies which domain we are hitting/targeting
+Origin => www.1.cdn.flipkart.com => (Origin host) Specifies from which domain you are hitting
+Referer => www.linked.com => It gives information about the previously visited Domain. That means, it can give information (URL) from which website you came here. Like name says, it will be able to know the referer, like sometimes when you guve adds in others domains, you will get to know from which Domain users are coming.
+User Agent => Mozilla/5.0;Intel MAC OS;Safari537.36 => This gives information about the user, ; like what are the browsers and its versions and the mac processor info, so that depending on these we can add few extra javascript/css.
+Accept => text/html,text/javascript,applicatioin/xhtml+xml,applicatioin/json => What type of information you accept
+Accept-Language => en-US,en;q=0.9 => Preffered response content language
+Accept-encoding => gzip,deflate,br (br means brotli. This is the best compression, butonly few browsers support it)  => Encoding algorithm. So when you compress and encode and send it, it will take less space and will be sent fast
+Connection => keep-alive/close => Keep TCP connection open or close after a request so that if its closed, for next subsequest calls there won't be another TCP handshake request.
+Authorization => Authorization: Bearer (Encrypted Token) => To send user credentials in an encrypted format so that backend can use this to check if it's a valid user or not
+Cookie => key=value  => Is used for multiple purposes. It can send some data information to server and also can receive information through Cookie header. It can also be used for Auth. It resends the Previous Server Cookie so that the user can be identified at the server.
+If-modified-since => Peformance improvement heaeder. If data is not modi after a particular mentioned time than send the same data, else send the updated data.
+Cache-control => If you want to store information which dosen't change for certain time like a day, so that you can reuse the data instead of fetching again.
+
+
+[IMG:30-31]
+Response Headers
+................
+Date => Fri, 27 Dec 2024 16:01:29 GMT => When the response was generated. This is very useful when you cached some data and want to see when was this cached response generated.
+Server => Apache/2.4.41 (Unix) => Provides Server info. This can be a security risk because when a hacker gets to know which server you are using and its version then there can be chances to use it to hack the system. You should see and remove this header because many companies have went to loss because of this 'Server' Header.
+Content-Type => text/html,text/javascript,applicatioin/xhtml+xml,applicatioin/json => Type of response content
+[NOTE: 1 alphabet = 1 Byte, Ex: 97 = 1100001]
+Content-Length => 256 => Original Body Response Length. This is using when you want to download a file. When browser knows the content length that is being downloaded, it can show the progress bar saying 30% is downloaded like that.
+Set-cookie => user_id=123 (Encrypted) => Informs about cookie that needs to be stored for future response. Like after login we acan see this Set-cookie being sent in few applicatioins.
+Content-encoding => gzip,deflate,br => Response content encoding algorithm. 
+Cache-control => If you want to store information which dosen't change for certain time like a day, so that you can reuse the data instead of fetching again.
+Last-modified => To check if it's a stale data
+Etag => To avoid override issues of a data (2 user who try to modify same data). When the Etag is not same at both server and client end than fetch the latest data before updating it, else directly updated data.
+Expires => Till how long this can be a valid data.
+
+[IMG:32-33]
+Status Code
+...........
+1XX => Information - Information about the request like the request has been accepted and all
+       100 => Continue - That means you keep sending the request and I am processing.
+       101 => Switching - Example when switching from long poling WebSocket or http to WebSocket and viceversas etc..
+2XX => Success - You will get the response now or in sometime but its successful.
+       200 => Ok - Whatever you wanted to do through the request, that job is done.
+       201 => Created - For POST calls. When you posted something successfully to the server we get 201 status code 
+       202 => Accepted - This is used for asynchronous requests. Example when you requested/posted something from/to bank and your your request in done but the email updated you will get it after a while.
+       204 => No Content - Used for DELETE requests
+       206 => Partial Content - Example when you request a large file then it comes in chunks in mulitple calls. So we use 206 status code in that case to let user know that this is not done yet and keep requesting.
+3XX => Redirection - When the domain/path is changed and we hit the same URL than it will be redirected to the different domain/path
+       301 => Moved Permanently - That means the domain is moved permanently o differnt domain like dineout.com to swiggy.com and redirect every user who is coming to this domain to the new domain
+       302 => Temporary Moving - When some maintainence work is having and domain is temporarily moved to different domain.
+       307 => Same as 302 - Only difference is it retains the method (GET/POST..) when redirected to other domain.
+       308 => Same as 301 - Only difference is it retains the method (GET/POST..) when redirected to other domain.
+4XX => Client Error
+       400 => Bad Request -  Sending wrong data. Example when sending user name, password, you are sending something wrong or not sending something
+       401 => Unauthorized - Not a valid user or not logged in. So he cannot access the API
+       403 => Authorization - You are a valid user but does not have access for this request. Example you are a valid user but cannot access the Admin data.
+       404 => Not Found - The request/path is not available
+       405 => Method not allowed - That means you are trying to hit a POST request of GET request which is not allowed
+       429 => Concurrent Request -  When you are trying make a request to update a lockin database when someone else is trying to make the same update simultaneously then it will stop the request.
+5XX => Server Error
+       500 => Internal Server Error - Something went wrong in the server and broke the code
+       502 => Bad Gateway - When the API Gateway is down / There is issue with the Proxy
+       503 => Service Unavailable - When the server itself is down
+       504 => Gateway Timeout - Took so long the process the request and it's timedout
+       507 => Insufficient Storage - Ran out the space. When the data storage limit exceeds. This happens mostly when you are playing with files like file upload / file processing
+
+
+NOTE: These Status codes are useful because we can create a Generic error handling in UI using these Status codes. Also we can do retries based on certain Status codes like 502/503 etc..
+
+
+
+
+==============================
+GraphQL (Graph Query Language)
+==============================
+[IMG:34-38]
+
+Why GraphQL => Lets say you have a requirement to get all continents, their countries and their languages to show in you App. If you have to to do in REST API you make 3 API calls in below order:
+               1. /api/continents => To get all continents first
+               2. /api/countries => To get all countries for each continent
+               3. /api/languages => To get languages for each country
+
+If you look at this, it will form a Graph kind of structure/mapping from Continents to Languages. Not only this, every data in web is in the form of a Graph structure, like when you like your friends will be able to see their post and when they like, their friends will be able to see the post, like that.
+Using GraphQL you can access these data in a structured format that you desire. Between you and the server there will be a GraphQL server. You just make one request for the data the way you want using proper query instead of making 3 API calls like in REST and GraphQL internally requests API (maybe by making 3 API calls) and return the data.
+**NOTE:** So here Client decides what data (in what structure in a precised way) he needs instead of getting all the unnecessary information and relying on the Server.
+
+Facebook created this in 2012 and using it internally and this made public/Open Source in 2015.
+
+GraphQL Benefits
+................
+1. Avoids Over-Fetching => You can ask exactly what fields you want
+2. Avoids Under-Fetching => Instead of under-fetching data in an API call and making multiple other API calls to get all the info, we can make only one API call in GraphQL and mention all those data that we want
+3. Efficiency & Precision
+4. Better Mobile Performance => When you dont over fetch in mobile, it improves Mobile Performance as the RAM and memory is less in mobile compared to Systems.
+5. Declarative data fetching => You can declare through query what you exactly want
+6. Structured / Hierarchical Structure
+7. Strongly Typed
+8. Introspection => You don't need to document information like in REST about Request, Response, Payload etc.. Here GraphQL client itself has all the info about, Query suggestions, Payload suggestions, Response fields suggestions etc..
+7. Real Time Capabilities (Subscription) => You can use WebSockets also in GraphQL
+
+NOTE: HTTP Request, HTTP Response, HTTP Status codes, HTTP Headers are all part of HTTP and not specific to REST. So GraphQL can leverage this. And also GraphQL provides toppings on top of it.
+
+
+REST vs GraphQL
+...............
+See [IMG:39-40]
+
+
+
+See [IMG-41] for basic fundamental idea about GraphQL Server and clinet before diving further
+
+GraphQL Building Blocks
+.......................
+See [IMG:42]
+
+
+**NOTE:If you do not use --save while instaling any package using npm, it wont be saved in package.json. If you want it to be saved in package.json add --save at the end, so that when someone pull your changes from GIt, they get get all packages by just doing npm i / yarn.
+
+
+Now lets do an example code:
+
+Create a structure and resolver at server
+
+Requirement
+...........
+
+Structure:
+books {
+   id,
+   title,
+   publishedYear,
+   author
+}
+author {
+    id,
+    name,
+    books
+}
+
+Data that you need:
+List of books
+List of authors
+List of books with author details
+List of authors with books details
+
+If we have to implement the above using REST, then we have to create 4 REST endpoints. But using GraphQL you can do this just once.
+
+[See code inside GraphQL folder]
+See the images [IMG:43-46]
+
+After watching code and images, my understanding:
+In GraphQL, everything (in precise, every Scheme) is defined in the backend server. That means all the Authod/book mapping and if we want books of all Authors, than by mapping book and author ids it will return all books of the author from Backend.
+So all this logic is defined in backend and from UI/Client we can use these schemas and basically just filter out the information that we want or ask more information in a single call istead of making mulitple.
+Note: You can make GraphQl call by just using a fetch call. Only this is body changes. You need to pass body in stringify form as: 
+body: {
+   operationName: "ExampleQuery",
+   query: query ExampleQuery{
+       books {
+          id
+          title
+          author {
+             name
+          } 
+       }
+   }
+}
+
+The same is for the Mutation as well:
+body: {
+   operationName: "ExampleMutation",
+   query: mutation ExampleMutation($title: String!, $authorId: ID!){
+       addBook(title: $title, authorId: $authorId){
+          title
+       }
+       variables:{
+          title: "Chakde System Design",
+          authorId: "2"
+       }
+   }
+}
+
+Only difference is instead of query we use mutation. And we pass arguments and its types to mutation(which we can access in args props in Resolver at server). 
+In addBook we pass these arg values again and within the addBook we define the return value. And addiotionally we have one more field called 'variables', where we define the values for each argument.
+
+After we made this fetch request, there will be Apollo server (One of the backend library for GraphQL Server) as a middleware between client and express server. 
+In the fetch call, you need to use the Apollo Server as the URL, then only it will hit the Apollo Server first and go to Express Server (That is, through Apollo Server).
+This Apollo server takes the request and understands it as a GraphQL request and passes the request to Resolver and returns the right result.
+Note: There will be only one Resolver and its respective TypeDef which takes all the GraphQL requests and returns the desired result precisely.
+Note: For every Schema/Type defined, we have Resolver. And for every method inside Query type / Mutation type, we have the same method defination inside the Resolver Query / Mutation.
+**Note: As everything is defined inside one resolver, you can do both over-fetching and under-fetching
+Note:We get data using Query and update data using Mutation.
+
+**NOTE: Instead of using fetch directly, you can use Apollo Client in the UI, which gives you powerful hooks like, useQuery, useMutation, in which you can pass the queries just like in fetch body.
+See image [IMG:47]
+
+
+===================================
+gRPC (Google Remote Procedure Call)
+===================================
+[IMG:48]
+gRPC is open source, developed by Google. It used RPC internally to call the systems. Using gRPC you can directly call the functions within the API server.
+NOTE: Browser is not always a client. If two servers/systems systems nneds to communicate some information, than one will be client which makes the request and other will be server.
+If you make a call from Client function to Server function, it goes through below steps:
+
+Client Function <---> Client Stub <-----> RPC Runtime     <----->   Server Function <---> Server Stub <-----> RPC Runtime 
+
+Client/Server Stub does massaging to data, like creating defination, types and all.
+
+See image [IMG:49]
+
+
+- In REST APIs communication happened through JSON format data (In stringified form of JSON). But in gRPC communication happens through something called Protocol Buffer (ProtoBuf) which is an IDL (Interface Defination Language)
+- It uses HTTP2 internally which is much faster and uses compressed headers.
+- Protocol Serializatio of data to communicate. NOTE: Even in REST API, you never send JSON directly, you send serialized form (stringified version) of JSON.
+- Single long live connection (Means there is a single TCP connection, where streaming of data happens from client to server and server to client)
+- Bi-Directional Streaming [IMG:50] (This is not like WebSocket)
+
+Protocol Buffer (ProtoBuf)
+--------------------------
+- Developed by Google
+- It is an IDL (Interface Defination Language)
+- Serialization/Deserialization
+- Binary Format - This data is transferred in a Binary Format which makes this much faster
+- .proto file (proto3) - Similar to .json files in case of REST APIs
+
+Now in this .proto file we write the Schema to define the methods, request/response, types of messages etc.. 
+This .proto file will be coverted so that it will support all other codes so that consumer client/server can execute any function written in .proto file irrespective of in what language it's written in.
+Also to serialize and deserialize the data, Protobuf provides some methods to be used so than any language can call it and use.
+
+[IMG:51]
+
+Benefits
+........
+- Less CPU resources - (As it in Binary data u)
+- So can be used it Mobiles
+- Faster (Because of Binary Data)
+
+See Image [IMG:52] before you jump into the code, to know what we are going to develop. 
+
+In th Client express you will exposing endpoints (which internally calls gRPC server functions using gRPC client) to browser
+
+gRPC vs REST
+............
+[IMG:53-54]
+
+
+Advantages & Disadvantages of gRPC
+..................................
+
+Advantages
+..........
+1. Performance (10x faster) - ProtoBuf, Binary Data, Header compression, Multiplexing (All these comes from HTTP/2)
+2. More Security - As it uses HTTP/2
+3. Streaming - Bidirectional Streaming
+4. Code Generation - It generates code, that can be leveraged on any language
+5. Language Agnostic - Language independent, as you can define .proto file first and whenever you want your definitions, you can create it in any language as you want.
+6. Service Discovery
+
+Disadvantages
+.............
+1. Non-human readable format - (Because communication happens in Binary data format)
+2. Limited browser support - (There is no Browser suppport for gRPC. So from browser we cannot directly hit gRPC. We use client (express) in between for a browser to interact with gRPC. To directly interact with gRPC we have some proxies which we can use in browser)
+3. No Edge catching - (Because internally it used POST method)
+4. Steeper learning curve

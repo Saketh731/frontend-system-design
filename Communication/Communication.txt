@@ -1,0 +1,26 @@
+[IMG:1-2]
+
+Short Polling
+=============
+
+Making requests to server in a setIntervel to get the live/new/updated data. There are Advantages and Disadvantages of this:
+- One major advantage is, as the connection is short lived there will less resource utilization.
+- One major disadvantage is, as there are continuous requests, scaling will be a problem (if it scales to million user and each making 10 requests a second then it is a major problem. Also sometime few reuqests are unnecessary as there is no realtime/updated data most of the times)
+[IMG:3]
+
+Example:
+Analytics - To get the info regarding the number of users visitng the website (traffic), number of click events etc..
+
+**NOTE:**
+Q) After doing const response = await fetch();  why do we do response.json()?
+A) This is because data is always trasffered in serialized format in the network. So we need to deserialize it before using it.
+
+**Check index.html and index.js files for the implementation example
+
+**Note: Two things to take care of while using short polling are:
+1. Have proper exception handling, else it will lead to global exception breaking the UI
+2. Do not forget to Clear the setIntervel On Navigation or User Action or Target Condition 
+
+
+Long Polling
+============

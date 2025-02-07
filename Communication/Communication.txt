@@ -24,3 +24,118 @@ A) This is because data is always trasffered in serialized format in the network
 
 Long Polling
 ============
+In short polling there is one drawback. It make requests in an interval continuous and where there is no update in the data then that request will go waste. 
+So here longPolling comes into picture where once request is made from the client, the request is persisted/live on the server until there is some change in data and once there is a change then the response is sent back to clinet.
+It is like a long request, persisted for longer period, hence it is called long polling.
+Once you get the updated data, you make the request again. It will be continuous.
+Note: There could be instances where even for a longer time there is no update, in that case there will be a timeout and the request will be rejected after that timeout.
+Note: Another disadvantage of short polling is, as you are dependent on the setTimeout, and when you setTimeout to 20 secons and in this case, even if the data got updated in 1 section, you need wait for 19 sec to show the updated data which is unnecessary. Long polling resolves this issue as it shows data immediately after aan update happens and server sends back the response.
+
+Example: Used for real time data like - When you make a payment, you need to show after payment status (success/failure) in UI. So, for this usecase you can use long polling, because once payment made, you can keep a long connection till you get the response and then show the status in UI. In real world there are better solutions but you need lot of server configurations for that. Long polling requires less server code.
+
+[IMG:4]
+
+Explanation of how it works:
+1. First you make a fetch request from client to server. 
+2. At first request daata is sent back immediately as it is new data for first request. 
+3. Once you get the response, in the 'then' block or after await response.json(); , you make the fetch request again (i.e call the same getData(latestData) function) by passing updated data.
+4. In server it will get updated data from request and compares it with the data in database. If the data is different, it return updated data else it holds the request by not returning anything.
+5. As there can be many users/clinets, every client is pushed to an array in else block (i.e when the data is same)
+6. When the data is updated (in /updateData request), you loop through every client and return the updated data to them.
+7. Again steps repeat from 3-6
+
+**Check index.html and index.js files for the implementation example
+
+
+WebSocket
+=========
+Till now we have seen that we need a make a request from client to server to get the response. But in WebSocket it is bidirectional. No need for a http request from client to server.
+It does not use https protocol. It uses websocket protocol
+WebSocket internally uses TCP connection
+
+[IMG:5]
+
+Use cases:
+1. Analytics
+2. Financial trading
+3. Online gaming
+4. Rea; time collabs like - Google drive, Google docs
+
+Explanation of how it works:
+1. Install scoket.io. Create websocket connection on server by wrapping the http server within the websocket server
+2. Create the connection - io.on("connection", (socket)={})
+3. Listen to the events - socket.on("chat message", (msg) => {}).  Here "chat message" is the custom event name
+4. Emit the mesage to all the users -  io.emit("chat message", msg);
+5. Now in the client you should be able to do two thingsafter installing socket.io - a. emit the request on sending a mesage, b. Listen to the server sent messages/responses
+6. Within the submit event - socket.emit("chat message", input.value);
+7. Listen to the server events -  socket.on("chat message", (msg) => {})
+
+So, here, when you initially load the page, you should be able to see a network call, which is of type websocket (not xhr). It will have a status code of 101, which means the protocol is changed (from http to websocket).
+Even in the Request header, you should be able to see a new header Upgrade (Upgrade: websocket)
+This request will be open and whenver you emit a message or get a response from server you will be able to see them in the "Messages" tab (instead of a preview tab).
+
+**Note: It is not a http protocol like http://localhost:3000. It is a websocket protocol and you can see the network call request like this - ws://localhost:3000/so  (ws=>websocket)
+**Note: Same like in http you have a secured connection https, even in websocket ws you have a secured connection wss like - wss://localhost:3000/so (ws=>websocket secure)
+
+**Note: Framing - When it is small data it can go in wss, but if its huge data, it should in small chunks/frames which is called as Framing.
+
+Challenges:
+1. Resource Usage - (Number of resources increases as the number of connections increases as each connection is a long lived TCP connection)
+2. Connections limit - (2000-5000 depending on the provider)
+3. Sticky session
+4. Managing load blancer
+(Between client and server there will be load balancer which transfers the request to different servers based on the load. So if one client TCP connection is made with one server then from next time load balancer should send the request to same server which is called Sticky connection and we need proper management of load blancer)
+5. Authentication - (Similarly like you do it with http, you should even do the same Authentication mechanism for websocket as well)
+6. Firewall/Proxy - There are few such Firewall/Proxy connection which do not allow websocket, you need to explicitly create proxy for the websocket
+7. Scalling - Vertical/Horizontal scalling
+8. Testing/Debugging - No such solid frameworks to test websockets
+9. Backward Compatibility when having a Connection Drop - When the websocket connection goes down, you need have a bakckup like to downgrade it to long polling/short polling to make everthing work smoothly until the websocket is up again.
+10. Resource Cleanup - Whenever you make a websocket down, you need to clean that resource, else your server cost will keep on increasing
+
+
+Server Sent Event
+=================
+You make a http connection request and keep it live till the time you want. In that duration you keep getting event from server in the same http. Unlike long polling where you get only 1 response after the waiting time, here you get multiple events.
+if an event is huge, then you get in form of frames.
+This is not bidirectional like websocket. It is a unidirectional request
+
+[IMG:6-7]
+
+Usages:
+1. Feeds
+2. Notifications
+3. Monitoring dashboard
+
+Explanation:
+1. Expose Server sent even end point from server
+2. Inside that end point fuction, set required headers
+3. Send data in text streams - res.write("data: Welcome to Server sent event \n\n");    in text format instead of doing res.send({data}), which will close the request. res.write() will keep request open by writing on the same request.
+4. Create a setInterval at server to get new data every few seconds (lets say 5 seconds) and write it to the same http request.
+5. From client instead of doing fetch use browser's EventSource to make request for Server sent event. -  const eventSource = new EventSource("/sse");
+**Note: (You can see type as eventSource instead of fetch in the Network tab)
+
+Challenges:
+1. Browser Compatability
+2. Conenctions limit (There can be connections limit and when you keep this request open than the total number of connections count will reduce by 1)
+3. Connection Timeout (Generally browsers are capable enough to handle such scenarios, but you also need to handle and have backup code for such timeout cases)
+4. Background tab behaviour (When multiple tabs are doing same request than the inactive tab might not receive live data in few browsers to optimize the performance)
+5. Resource utilization
+6. Load balancer
+7. Sticky Connection
+8. Firewall/Proxy
+9. Testing
+10. Broadcasting (When there are millions requests for sse like in Notifications, then you need to use something like message queuing)
+
+
+Webhook
+=======
+[IMG:8-9]
+
+Webhooks are nothing but normal POST API endpoints. We use webhook manytimes in real life without realizing its a webhook.
+Lets take an example: 
+Example1: In nstagram if you post something, it will ask you to post the same into facebook. So basically here, facebook will have a post endpoint, which will be called by Instagram endpoint to send the data to it in body.
+That means, it is like instagram is sending an event to facebook and that post endpoint in facebook is called a webhook which will be executed on this event and adds the data/post in facebook also.
+
+Example2: When you do some processing like making a payment, instead of waiting or doing repeated calls to Stripe/Razorpay for status, you give them a callback url/API (which is called webhook) to be called when the payment is completed. So here, the post api enpoint that you expose to the payment gateway is called a webhook.
+
+Example3: Like you create a webhook in github, by providing the enpoint(webhook) which you want to be triggered/called whenever you make a commit.

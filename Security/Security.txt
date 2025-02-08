@@ -85,3 +85,18 @@ Note: If a Parent website trying to access data from child website and you want 
       }
  </script>
  //This is not required in modern borwsers as it will take care of such threats, but still it is safe to have
+
+
+
+===============
+SecurityHeaders
+===============
+
+[IMG:15-18]
+
+1. X-Powered-By - This header will tell what server you are using like Express/Tomcat... Based on this hacker will inject code based on the server code and he know security vulnerabilities of each specific server
+2. Referrer-Policy - When you navigate from one website/domain to another website/domain, the current website will tell from which domain you came, through the 'referer' header in the (Request Headers). This has the entire url including the query params of the previous website url from which you came to current website. So you can stop seding this 'referer' or just send send origin name instead of all params by setting up the 'Refferer-Policy' header in General Headers.
+3. X-Content-Type-Option - In olden browsers there used to be something called as Sniffing. When client expects a jpg file and sets Content-Type to jpg. Now when server sends HTML text instead of image, browser smartly reads the content and understand it is HTML and changes Content-Type to HTML. This is not correct as any middle person (hacker) can inject HTML code in between. To overcome this we set the header 'X-Content-Type-Option' to 'nosniff'. This will not change the Content-Type based on the content.
+4. X-XSS-Protection - You can set these to 0(no XSS), 1(allow XSS), 1; mode=block(allow but if doing any malicious activity then block). You can ignore this header if setting proper Content-Security-Policy headers. CSP headers is the right way to deal with these XSS.
+5. HSTS (Strict Transport Security) - When you request through http, if it's first time then the request is sent to server and server redirects it to https with 301 status code (you need to write code in server to do this). Which then makes request again with https and now browser sets a header called Strict-Transport-Security to  "max-age=31536000; includeSubDomains; preload", so that next subsequent http requests will be automatically redirected to https (301) at the browser level withouth reaching to server.
+

@@ -34,6 +34,8 @@ Mitigations
 6. CSP Headers - (Sometimes things are not in your hands like someone can inject third party resource/script into your browser. To handle all these, from server, you can add few headers which tells which resources/scripts to trust and what type of content to accept and all to overcome these issues)
 7. Avoid using 'eval'
 
+[IMG:7-13]
+
 CSP (Content Security Policy) 
 .............................
 1. Allowed Sources - Tells from what sources/origins you can load the scripts/images/iframes...

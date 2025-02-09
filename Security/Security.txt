@@ -103,7 +103,7 @@ SecurityHeaders
 
 
 =======================
-Client Storage Security
+Client Side Security
 =======================
 
 [IMG: 19-26]

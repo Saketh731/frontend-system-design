@@ -100,3 +100,17 @@ SecurityHeaders
 4. X-XSS-Protection - You can set these to 0(no XSS), 1(allow XSS), 1; mode=block(allow but if doing any malicious activity then block). You can ignore this header if setting proper Content-Security-Policy headers. CSP headers is the right way to deal with these XSS.
 5. HSTS (Strict Transport Security) - When you request through http, if it's first time then the request is sent to server and server redirects it to https with 301 status code (you need to write code in server to do this). Which then makes request again with https and now browser sets a header called Strict-Transport-Security to  "max-age=31536000; includeSubDomains; preload", so that next subsequent http requests will be automatically redirected to https (301) at the browser level withouth reaching to server.
 
+
+
+=======================
+Client Storage Security
+=======================
+
+[IMG: 19-26]
+
+Points to note:
+- Firstly store sensitive info and all in server itself. If storing anything in client for some reasons then do not forget to set token expiry and encryption when storing sensitive data
+- When storing Authentication related tokens, use HQT/OAuth, set session expiry and provide MFA (Multi Factor Authentication) like OTP and all for double safety
+- To take it to next level add a checksum(originalData). This will taken the sesitive data and returns as an argument and return the same result always for same data. And you store this checksum in local storage. When you retrieve sensitive data, you retrieve its checksum along with it and you compare that checksum with your checksum(originalData) logic to see if both are equal for second level of security check
+- When storing anythig in browser storages like localStorage, cookies etc.. consider their storage limits in mind
+- Ideally cookies should be set from server along with its headers. If you are setting it from client for some reason then make sure to add 'httpOny' 'secure' header to it so that it can only be acceessed through http and not using document.cookie, so that no third party extension or hacker can steal it.

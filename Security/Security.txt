@@ -146,3 +146,38 @@ There can be issues/security vulnerabilities in the packages that you installed,
 4. Dependency locking - Generally we have pipelines set up which runs when we merge a code. If there are frequent dependency erros, the build will fail frequently. To avoid these, you need to lock the dependencies using package-lock.json/yarn.lock - It locks the version of direct and indirect dependencies and it will not change everytime you run npm install, until you update them manually.
 5. Security penetration testing using tools - Even if we take care of above things, still there are lot of things on which we need help from tools. Example - App scanner, burp suite, zed attack proxy
 
+
+
+========================
+Compliance & Regulations
+========================
+
+You might have read many articles on biggest companies paying fines in million dollars for violating some rules and regulations.
+
+Example: Websites have started taking consent for storing the cookies.
+
+Data Protection - GDPR (EU) - Permission to store Cookies, to Access Photos, to Send notifications, to collect personal Info, data encryption,
+Health sector - HIPPA (USA)- patient data encryption, MFA, delete patient record if not in use
+Dinancial services  - PCI DSS (Global) - Monitor who is accessing customer data, use tokenization, regular vulnerabilities scan, more secure coding practices
+Government - FISMA (USA) - Continuous monitoring, Regular update and path systems, Risk assessments and security documentaion of how to fix security breaches if happened in future
+Cloud Services - ISO/IEC 27001 (Global) - Regular third-party security assessments
+Accessibility - WCAG (Global) - Screen reader capability, auditing and testing related to disability, alternative for videos/images for blinds/disabled
+Privacy - CCPA (USA) - California residents rights like Remove subscriptions to mails, access personal information, privacy policy plain language
+Cybersecurity - NIST (USA) - Trainee to employees, private network, public network
+
+Web Application Security - OWASP Top Ten (Global) 
+-------------------------------------------------
+These are top 10 web application security checks that every application must have
+1. SSJI (Injection Attack like SQL Injection)
+2. XSS (Cross-Site Scripting)
+3. Authentication and Session Management
+4. Insecure Deserialization (for XML/JSON)
+5. Security Misconfiguration (Giving least privilages as needed)
+6. Sesitive Data Exposure
+7. XML External Entity (XXE)
+8. Broken Access Control
+9. Security Headers Not Set
+10. Cross-Site Request Forgery (CSRF)
+
+
+*******Note: As a developer you need to take care of these, like when someone asks to delete their complete data then as a developer you need to have logic in place to delete/handle these.

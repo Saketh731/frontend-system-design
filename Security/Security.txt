@@ -102,9 +102,9 @@ SecurityHeaders
 
 
 
-=======================
+====================
 Client Side Security
-=======================
+====================
 
 [IMG:19-26]
 
@@ -128,3 +128,21 @@ Secure Communication (HTTPS)
 4. Compliance with Security Standards - Many third party libraries (like payment gateways) request you to move to HTTPS to utilize them
 5. Trust and Reputation - When you try to change a https website to http, it will by default redirect to https again
 6. Faster website loading (HTTP2) - To utilzie HTTP2 (which is much faster) you need to be in https
+
+
+===================
+Dependency Security
+===================
+
+[IMG:28-35]
+
+There can be issues/security vulnerabilities in the packages that you installed, or the nested dependency packages that you installed.
+1. To check this you can run "npm run audit" in your code which gives list of all vulnerabilities and suggests you to fix it through "npm audit fix". But never fix them using this command as it will updrage packges and nested dependencies to stable version but you may face issues in your code as it is not updated as the new version. So code can break. Good thing is to check each package one by one and fix it.
+   npm audit report - generates detailed report
+2. In your package itself - npm set audit true. Everytime during npm install/update it will automatically be executed and highlights vulnerabilities
+3. Sometimes we dont run the report daily so we can monitor it using some tools:
+   Dependadbot(dependadbot.yml) - Gives you weekly/monthly report of these security vulnerabilities in the dependencies.
+   codeql - it goes one step ahead and does code monitoring as well along with dependency monitoring
+4. Dependency locking - Generally we have pipelines set up which runs when we merge a code. If there are frequent dependency erros, the build will fail frequently. To avoid these, you need to lock the dependencies using package-lock.json/yarn.lock - It locks the version of direct and indirect dependencies and it will not change everytime you run npm install, until you update them manually.
+5. Security penetration testing using tools - Even if we take care of above things, still there are lot of things on which we need help from tools. Example - App scanner, burp suite, zed attack proxy
+

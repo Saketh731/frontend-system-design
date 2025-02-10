@@ -106,7 +106,7 @@ SecurityHeaders
 Client Side Security
 =======================
 
-[IMG: 19-26]
+[IMG:19-26]
 
 Points to note:
 - Firstly store sensitive info and all in server itself. If storing anything in client for some reasons then do not forget to set token expiry and encryption when storing sensitive data
@@ -114,3 +114,17 @@ Points to note:
 - To take it to next level add a checksum(originalData). This will taken the sesitive data and returns as an argument and return the same result always for same data. And you store this checksum in local storage. When you retrieve sensitive data, you retrieve its checksum along with it and you compare that checksum with your checksum(originalData) logic to see if both are equal for second level of security check
 - When storing anythig in browser storages like localStorage, cookies etc.. consider their storage limits in mind
 - Ideally cookies should be set from server along with its headers. If you are setting it from client for some reason then make sure to add 'httpOny' 'secure' header to it so that it can only be acceessed through http and not using document.cookie, so that no third party extension or hacker can steal it.
+
+
+============================
+Secure Communication (HTTPS)
+============================
+
+[IMG:27]
+
+1. Data Encryption (TLS) - Data is always tranffered in TLS which makes is secure, because it is encrypted and no middle men can read it.
+2. Authentication (SSL & TLS) - Its safe becaues of SSL certificate provided by SSL/TLS Authorities, which is used when client requests some data.
+3. Data Integrity (MAC) - Internal checksum (MAC- Message Authentication Code) is provided by HTTPS by default for double check
+4. Compliance with Security Standards - Many third party libraries (like payment gateways) request you to move to HTTPS to utilize them
+5. Trust and Reputation - When you try to change a https website to http, it will by default redirect to https again
+6. Faster website loading (HTTP2) - To utilzie HTTP2 (which is much faster) you need to be in https

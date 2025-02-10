@@ -1,7 +1,7 @@
 ===================
 How the Web Works?
 ===================
-Server => Even you latop/system can be a server. Server is nothing but a machine which can process some request and respond you some data.
+Server => Even your latop/system can be a server. Server is nothing but a machine which can process some request and respond you some data.
           But our local server is not reliable as it can shut down any time. Has less memory space, CPU, RAM. So we take big server which is available 24/7.
 
 IP Address => Lets take an example of you ordering a pizza from Dominos. When you call the dominos person for giving order, first they will ask you after taking order 

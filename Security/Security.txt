@@ -240,3 +240,18 @@ app.use((req, res, next) => {
 
 Now if you go to Application tab in devtools and under iframe section when you click on top (i.e top iframe which is your application), you can see list of all Permissions Policy for your browser. As you set this header, now in that list you wont be able to find 'geolocation'.
 
+
+
+===========================
+SRI (Subresource Integrity)
+===========================
+Sometime there may be instances where you trust a domain which you are imporitng or calling. The domain is good but the resources that this domain is using may not be trust. So if your this trusted domain gets hacked then your website also is at risk.
+To overcome this we have something called as 'integrity' prop in almost every cdn/link that you import which is a 'sha' hash value which gets generated when the cdn gets downloadedthen some crypto algorithm gets executed and using the content that is downloaded it creates the 'sha' hash. This gets created everytime the  cdn (lets say bootstrap/react cdn) gets downloaded and will be same everytime. This is all done by browser.
+
+You are responsible to generate the. There are some webpack libraries (during the build only you can generate those sha values) or even you can do it in browser by passing the cdn links.
+
+So to know that nothing has been injectted by hacker into the content, browser just compares the integrity (sha hash) value of 2 instances which should be same.
+This 'integrity' gives benifit not just on the security part but also when the version changes and you get new data which breaks the code, then this integrity prop will stop this from getting new content as the sha hash value changes.
+Example: <link href=".." rel="stylesheet" integrity="sha384-T3c6hkas..." crossorigin="anonymous"/>
+
+[IMG:55-59]

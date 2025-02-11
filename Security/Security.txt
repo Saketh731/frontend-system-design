@@ -196,6 +196,26 @@ SSRF (Server-side Request Forgery)
 
 This is actually taken care at server side code. It is a web security vulnerability that allows an attacker to cause the server-side application to make requests to an unintended location. Though the internal servers are restricted to certain networks, still you can trigger them through public network. Like by using Walmart.com which internally calls few internal servers, you can send data some malicious data in the payload or through query params to internal servers to execute or call external domains to steal sensitve data.
 
-[IMG-37-41]
+[IMG:37-41]
 
 XML External entity attack(XXE) - When we send XML data in payload or intput, attacker can write HTML which is similar to XML to access sensitive data in server. You need to have proper serialization/deserialization algorithms to prevent this.
+
+
+=======================================
+SSJI (Server-side JavaScript Injection)
+=======================================
+
+It is handled on server side code. It is injecting js code through input/url params/forms... which will be executed at server to steal code.
+There are some function which can cause such SSJI threat
+
+eval()
+setTimeout()
+setInterval()
+Function()
+parse()
+
+[IMG:42-47]
+
+Because few of below function executed javascript code directly, they may cause SSJI.
+
+***NOTE: We must handle exception properly else it will lead to global exception in which our code will be exposed. Lets say in setTimeout() there was an exception and we did not handle it, then it will go to global exception.

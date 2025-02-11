@@ -219,3 +219,24 @@ parse()
 Because few of below function executed javascript code directly, they may cause SSJI.
 
 ***NOTE: We must handle exception properly else it will lead to global exception in which our code will be exposed. Lets say in setTimeout() there was an exception and we did not handle it, then it will go to global exception.
+
+
+==================
+Permissions Policy
+==================
+You may install number of packages/iframe in you website, but how do you trust them. THey may inject some malicious scripts.
+Through some third party package some script is injected in your own website, so you are actually not making cross-domain request but request from same domain thtough third party script.
+
+Using Permissions-Policy header, you can set permissions to camera, microphone, geo locatins, fullscreen, payment .... like who all can access.
+
+Example:
+
+app.use((req, res, next) => {
+  res.setHeader("Permissions-Policy", "geolocation=*");
+  next();
+});
+
+[IMG:48-54]
+
+Now if you go to Application tab in devtools and under iframe section when you click on top (i.e top iframe which is your application), you can see list of all Permissions Policy for your browser. As you set this header, now in that list you wont be able to find 'geolocation'.
+

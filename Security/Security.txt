@@ -181,3 +181,21 @@ These are top 10 web application security checks that every application must hav
 
 
 *******Note: As a developer you need to take care of these, like when someone asks to delete their complete data then as a developer you need to have logic in place to delete/handle these.
+
+
+=================================
+Input Validation and Sanitization
+=================================
+
+[IMG-36]
+
+
+==================================
+SSRF (Server-side Request Forgery)
+==================================
+
+This is actually taken care at server side code. It is a web security vulnerability that allows an attacker to cause the server-side application to make requests to an unintended location. Though the internal servers are restricted to certain networks, still you can trigger them through public network. Like by using Walmart.com which internally calls few internal servers, you can send data some malicious data in the payload or through query params to internal servers to execute or call external domains to steal sensitve data.
+
+[IMG-37-41]
+
+XML External entity attack(XXE) - When we send XML data in payload or intput, attacker can write HTML which is similar to XML to access sensitive data in server. You need to have proper serialization/deserialization algorithms to prevent this.

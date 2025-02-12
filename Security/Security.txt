@@ -266,3 +266,33 @@ How it works:
 1. If browser identifies it as a different domain, then before making the actual request, it first makes a preflight request which goes to the server and server responds with all the CORS headers. By reading these headers, browser will know whether this domain is allowed to make request or no. If it is allowed then next the actual request will go.
 
 [IMG:60-65]
+
+
+=================================
+CSRF (Cross-Site Request Forgery)
+=================================
+
+[IMG:66-70]
+
+As the name says, hacker makes a request to the cross site. 
+Example 1: When are transferring amount to some account in a bank webiste then that banking URL might have the account number being transferred to. So using this someone can add thier account number in the url and can send you a link to buy iphone for small price and navigate it to that url which will credit to your account.
+Solution1: To resolve this, you can set 'Set-Cookie' header, by using 'Referer' header to check if it is coming from the same domain or different, by setting CSP headers and so on..
+Example 2: You may see that when you click any click some post will happen in facebook without your knowledge.
+Solution2: To resolve this you can create a csrf token at server side an expect the client to pass it evertime (generally there wont be forms until hackers adds it so it expects when made POST request through forms) and it should match the token everytime. It is not sent to client, bu is always stored in server session.
+
+This happens beacuse when user is already loggedin in the bank site then he have all the cookies and hackers send a request to server, it thinks it is a valid user & request and processes the request. This also happens because of http requests being stateless. That is, each request is independent and all complete data related to cookies and all.
+
+Vulnerabilities:
+- Using Get to update data or post data (Even if it's POST also you can do CSRF using Forms. Check images)
+
+Note: You dont need to click a button <a herf=""/> to make a request. At the time of load itself you can make a request by using an <img src=""/>
+
+Mitigation:
+
+[IMG:71-79]
+
+
+
+
+
+Note: For banking websites, if loggedin in one tab or session do not allow to login in another tab or session again

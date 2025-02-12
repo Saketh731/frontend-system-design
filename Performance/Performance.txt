@@ -58,3 +58,14 @@ b. User Centric Metric - (This is more of performace in user perception. Like ho
          Browser Centric Metrics help you identify technical issues
          User Centric Metrics help you improve user experience
 
+
+
+=================
+Performance Tools
+=================
+
+1. Real User Data - (There are tools to track real user data. You just need to copy paste the script inside the index.html header and it will start tracking). You will be able to track everything as mentioned above for each page. It is good to track real user data as each individual has different machine and CPU, RAM..
+2. Simulated Data - (Now you need to work on your machine and simulate it as if it is running on different other machines. There are some tools which helps you with this)
+3. Developer Mode - (While developing, you can improve performace using browser dev tools like Lighthouse, Network tab, Performance tab.. )
+
+[IMG:17-27]

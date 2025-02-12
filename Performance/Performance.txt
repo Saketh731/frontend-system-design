@@ -1,0 +1,60 @@
+====================
+Performance Overview
+====================
+
+Performance of a website can be effected by various factors:
+- Server Side
+- Network layer
+    - Router
+    - DNS
+- Client Side
+    - Fetching large size data/images..
+    - Order of fetching
+    - HTML/CSS/JS code
+    - Framework (React/Angular..) code
+
+[IMG:1]
+
+
+=============================
+Why Performance is important?
+=============================
+
+[IMG:2]
+
+
+======================
+Performance Monitoring
+====================== 
+
+Core Web Vitals
+...................
+There are many Web Vitals to measure the performance of the application. Out of those 3 are main:
+1. LCP (Largest Content Paint) - (During loading) - Amount of time taken to load maximum content in the scree. => (good upto (2.5 sec) > okish 4 sec > worst )
+2. FID (First Input Delay) - (During interaction) - Amount of time taken to respond (not for API call, its for javascript to load) when did some interaction => (good upto (100 ms) > okish 300 ms > worst )
+3. CLS (Cumulative Layout Shift) - (Visual Stability) - If you app keep jumping or scrolling up and down and things getting loaded still, which shifts the components. => (good upto (0.1) > okish 0.25 > worst )
+
+(Note: This CLS Cumulative Layout shift happens entire time, even while you scroll till last of the screen. Till the last point CLS is calculated and given a value. CLS majorly happens due to images/videos as they take time to load)
+
+[IMG:3-8]
+
+Now FID First interaction is a good metric to measure but what about next interaction. We need to measure them also to know the web performance. So another metric gets added to  Core Web Vitals which is called as INP (Interaction to Next Paint)
+
+4. INP (Interaction to Next Paint) - As the name says it measures the time between any Interaction on the web to the next paint that occurs after interaction. It sees all the interactions on the web page and gives the worst INP value so far. =>  (good upto (200 ms) > okish 500 ms > worst ). The worst is considered as INP.
+
+[IMG:9-11]
+
+***NOTE: In JS, interaction dealys can happen when you do any event (like click/keyup..) and due to event-delegation multiple events (like click/keyup..) gets triggered, then you will face a delay and it will be measured in INP. The worst is considered as INP.
+
+
+Not just these Core Web Vitals, there are even other metrics:
+a. Browser Centric Metric - (Where browser measures all the metrics like time taken to load
+b. User Centric Metric - (This is more of performace in user perception. Like how much time he think it loaded, was it too much or we covered with some Shimmer UIs like that) Example: FCP, LCP, FID, INP, CLS..
+
+[IMG:12-16]
+- Connection Time - Time taken to establish TCP handhsake or SSL Connections
+
+***Note: Browser Centric Metrics help you identify issues which are causing User Centric Metrics
+         Browser Centric Metrics help you identify technical issues
+         User Centric Metrics help you improve user experience
+

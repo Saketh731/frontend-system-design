@@ -255,3 +255,14 @@ This 'integrity' gives benifit not just on the security part but also when the v
 Example: <link href=".." rel="stylesheet" integrity="sha384-T3c6hkas..." crossorigin="anonymous"/>
 
 [IMG:55-59]
+
+
+====================================
+CORS (Cross-Origin Resource Sharing)
+====================================
+When you try to request resources from other domain/sub-domain/prt/protocol, then the other domain may not allow you to access those resources. Because it set few CORS related headers, which stops the access. (You can see those headers in the images)
+
+How it works:
+1. If browser identifies it as a different domain, then before making the actual request, it first makes a preflight request which goes to the server and server responds with all the CORS headers. By reading these headers, browser will know whether this domain is allowed to make request or no. If it is allowed then next the actual request will go.
+
+[IMG:60-65]

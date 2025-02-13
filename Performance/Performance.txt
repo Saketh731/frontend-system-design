@@ -69,3 +69,199 @@ Performance Tools
 3. Developer Mode - (While developing, you can improve performace using browser dev tools like Lighthouse, Network tab, Performance tab.. )
 
 [IMG:17-27]
+
+
+Note: Whenever you doing Performace checking or running in Light house, please do it in Incognito mode as there wont be any caches or extensions. And duck out the Dev tools as it may compromise the size and select whether you want to test in desktop or mobile.
+
+
+
+====================
+Network Optimization
+====================
+[IMG:28,30]
+
+1. Critical Rendering Path
+...........................
+[IMG:29]
+Generally data is transformed in the form of packets (thorugh different layers). Once client receives a part of the HTML/CSS/JS, it will start rendering it. CSS/JS may come in the HTML bundle or as a links to another bundle.
+[IMG:31] - This entire thing is created again and again everytime you keep getting new packets.
+Note: CSS - Render Blocking (i.e blocks the render until the CSSOM is created)
+      JS  - Parsing Blocking (i.e when HTML encounters a script tab, it will stop parsing next line HTML until JS is executed/parsed)
+
+***To atleast show something on screen make sure First Packet is always within 14kb
+First Packet - 14kb
+
+Check code:
+Example1: To get the first packet in less than 14kb size, include the intial/critical data which has to be shown on screen (FCP) in the HTML only (I mean the JS and CSS)
+
+
+2. Minimize Network Requests
+............................
+If there is a 10kb data and you can make 1 request for it or you can make 5 multiple 2kb requests. Most of the time single 10kb request is only fast, because for each request it has to make TCP connection, SSL handshake and many other stuff which will delay the response
+
+***Note: Browser can allow max of 6-10 parallel calls per domain. Remaining will wait in the Queue. Hence, less the number of http requests, more the advantage
+***Note: For smaller images you can do 2 things:
+         1. Base64 format for Images (As it will be resided in your HTML and no need to make additional http request)
+         2. SVG for Images (As it will be resided as a JavaScript code and no need to make additional http request)
+
+[IMG:32]       
+
+Check code:
+Example2: Have seperate index.css, index.js files. So they will be loaded seperately. But in first case, all will be loaded in single index.html file
+
+
+
+3. Async JavaScript
+....................
+Whenever you HTML parsing encounters Script file / JS file, it halts the process and first parses the JS file
+
+**Note: So when you put script tag inside head tag then then before rendering the body tag, the script get executed and if it tries to access somthing from body tag then it will be undefined and event the code may break
+        So even in Network tab yuo can see the FCP/LCP will be shifted/delayed as the HTML rendering is blocked. Even the blocked message you can see under Network section in Performace tab
+
+[IMG:33-34]
+
+Difference between async vs defer:
+<script/> vs <script async/> vs <script defer/>
+
+a. <script/> => When HTML encouters this script tag, it blocks the HTML render and downloads the JS code and parses/executes it
+b. <script async/> => When HTML encouters this script tag, it parallelly downloads the JS code and after downloading it blocks the HTML render for parses/executes JS code
+c. <script async/> => When HTML encouters this script tag, it parallelly downloads the JS code and after downloading it will not block the HTML render, instead it will wait for HTML render to finish to parses/executes JS code
+
+normal script => blocks while both downloading and executing
+async => parallelly downloads JS code and blocks while executing
+defer => parallelly downloads JS code and will not block while executing as it executes at last after HTML render
+
+Best way is to use defer as it will improve FCP/LCP...
+
+Ideal way is to pur script tag at end of body tag as it will not block HTML render and will be downloaded executed at last. Else better option would be to use defer, as it will not block HTML rendering and also saves time by downloading JS code parallely
+
+[IMG:35]
+
+
+4. Avoid Redirection
+.....................
+
+When try changing https to http in url of any website, it will automatically redirect to https. 
+So basiclly how this happens is, when you remove change it to http and hit it, it will go to the server and server will send a redirect header and again from client we will be making calls to https site.
+But in flipkat.com or other big sites if you see, there wont be any http call even if you change it to http. There will be directly https call only. This is the optimization that they are doing. There is a website called hstspreload.org where you can check the statuses of different websites on this and also register your site here
+
+[IMG:36]
+
+
+
+5. Resource Hinting
+...................
+
+When you provide img tags in html wth same cdn links (same domains), then when html parser encounters 1st img tags it will make connection. You can see that in waterfall under connection start
+Connection start
+    - Stalled
+    - Proxy negotiation
+    - DNS lookup
+    - Initial connection (TCP)
+    - SSL ()
+
+So now instead of making this same connection again and again for each request, browser makes it at only first image.
+
+- preconnect 
+    Now to further optimize it we can provide rsource hiting like waht resources will be used before hand only using link tag like below
+    <link rel="preconnect" href="https://cdn.glitch.global" crossorigin /> 
+    This will make connection to that domain request even before the html parser reaches the img tag. So images will be downloaded even faster.
+
+- dns-prefetch
+    Now in some cases our job/request may happen much later so we do not need to setup entire connection at the start itself. So we can setup a part of it like just a dns connection like below
+    <link rel="preconnect" href="https://cdn.glitch.global" crossorigin /> 
+
+- preload
+    Now when you have any banner image, which you want to reload at start only, those you can ask to preload by not just establishing connection, but also makig the request and getting data before itself like below
+   <link
+      rel="preload"
+      href="https://cdn.glitch.global/db01a8e4-9230-4c5c-977d-85d0e0c3e74c/image-1.jpg?v=1669198400523"
+      as="image"
+    />
+
+
+These calls will happen parallely without blocking the HTML rendering
+
+***Note: webpagetest.org => you can put your website link here to get detailed view of all the above things
+
+[IMG:37-38]
+
+Now there are few more things like prefetch and prerender
+
+- prefetch
+    This will load the resources which will be needed in the near future with low priority (like in other page)
+
+- prerender
+    This will load the entire page and all its dependencies in the backgroud and stores in cache. You will page the entire page url to this
+
+***Note: prefetch and prerender will decrease the priority of loading. 
+
+[IMG:39-40]
+
+If things are already in HTML you can ignore all these as it will be taken as priority. Use these only when you know few calls will be made after some API calls or after taking data from responses.
+
+
+
+5. Resource Hint Priority
+.........................
+You can give priority for the Resource hints using fetchpriority="low" attribute. If not given anything, by default it will take as high priority
+[IMG:41]
+
+There is also another way to fetch images with low/high priority
+[IMG:42]
+
+
+6. Early Hints
+...............
+When you are getting intial HTML from server and server is taking time to process it, you can asks for early hints (to send responses back) like what css files are we using or what images we are going to use in that html and so on so that we can prefetch them and keep it ready
+Note: It will return early hints with 103 status code
+[IMG:43
+Browser will send the hin in the Content header like below. Check below images
+[IMG:44-45]
+
+
+7. HTTP Upgrade (Http/1.1 vs Http2 vs Http3)
+...........................................
+[IMG:46]
+
+HTTP/1.0 - Basic like IP, TCP connection, TLS options
+HTTP/1.1 - HTTP 1.0 + HTTP syntax + HTTP/1.1 semantics (rules) - This is where REST API came in
+
+(HTTP/1.1 has limitations like maximum number of API requests it can make, you cannnot do multiplexing, streamings capability not there, headers are not compressed... also having security and performance related issues)
+
+HTTP/2 - HTTP 1.1 + Secure, performant, Compressed headers, Streaming, In same TCP connection, you can send all data like html/css/js. No limitations for number of connections
+
+HTTP/3 - Used UDP instead of TCP. No acknowledgement, no handshake. If you get data well and good, if not I don't care. TLS is a must feature and inbuilt unlike in HTTP/1.1 where it is optional. Better security and performace compared to HTTP/2
+
+***Note: For both HTTP/2 and HTTP/3 to work, you need to be only on HTTPS
+
+Check Code:
+Example:4 Mainly in HTTP/2 it allows you to make as many parallel calls as you want and not have any restriction like 4 parallel calls at a time and remaining will wait in Queuelike HTTP/1.1
+
+Note: HTTP/3 is mostly used for streaming platforms like Youtube, where even if we loose few packets it dosen't matter
+
+
+8. Compression (brotli/gzip)
+.............................
+[IMG:47]
+***brotli is better compression as compared to gzip
+Using these compressions, the size of a request will decreases
+
+[IMG:48-49]
+Note: Browser sends the compressed data and browser will uncompress it from the client when it know whenther it is brotli or gzip
+
+How to do it?
+In express server you can download a package called 'shrink-ray' and add it in the middleware so that at runtime all the responses which are sent are sent with brotli compression
+[IMG:50]
+
+There is a catch here - Everytime when server has to compress it before server request it will be delayed in the response. 
+So what you can do is a build time compression at webpack. That is, you can ask server to send .js file as .js.br and when you notice this .br you can do a brotli compression (This can be configured at webpack) while building itself and the build size will reduce.
+[IMG:51-52]
+
+
+9. Caching
+...........
+- Cache Policy (The repeated requests can be cached. When it coming from cache/memory, in size section on top you can see name as 'memory')
+  (cache-control, expire, etag, last-modified)
+- Service worker (To cache in disc cache format)
+[IMG:53-55]

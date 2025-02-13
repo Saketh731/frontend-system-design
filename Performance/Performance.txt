@@ -358,3 +358,47 @@ Example: In the app-router, you want to reneder tutorial.js on the client and it
  Benifits of RSC
  ...............
  [IMG:71]
+
+
+==================
+Build Optimization
+==================
+
+Build optimization is done using Bundlers.
+
+Benifits of Bundler
+[IMG:72]
+
+Comparing different Bundlers
+[IMG:73]
+
+Optimization (Customer Experience vs Developer Experience)
+..............................................................
+Below are the things you need to consider while choosing a Bundler:
+
+Customer Experience
+    [IMG:74-75]
+    - Code Splitting - It is done at the time of build
+    - Code Obfuscation - You give meaningful big names to variables, function etc.. Bundler will will replace big names with small names and bundles it
+    - Pruning & Optimizing CSS - It only ships the used CSS. Like in Tailwing, it wont ship all the CSS styles it has (like bootstrap) but only the ones which are being used
+    - Compression - Extra compression using brotli or gzip at the time of build so that you can ship it at Network layer
+    - Remove Source Maps in Production - It is a map of your JS code. Browser has the compressed version of JS and when you get error if it points to that compressed version, you will not understand. You need to point it to the actual code and this mapping is done thorugh Source Maps which usually bundlers provide us
+    - Profiling and Analyzing bundles - When you do code splitting and wanted to know if you gave right sizing and what code is in each bundle (like a full analysis), there are different tools out there
+    - Cache using Asset hashing - Append something like SHA hash (which will generated based on the content) to the bundle name. If the contenct changes the bundle hash changes and browser will under content changed and it expects for new assets
+    - Vendor Chunk Splitting - Vendor means the third party libraries. Split them in a right fashion. Generally common packages you bundle then in a seperate bundle called Vendor.js bundle. Do not put uncommon bundle in these. Include them in those page specific bundles when the page or compoenents loads
+
+Developer Experience
+    [IMG:76]
+    - Faster builds - Lets say if you have 300+ packages then the build may take hours and any hot fix may delay for hours
+    - Parallelization - Builds the packages in parallel
+    - Cache Management - When you have packages which did not change then the bundler may cache them to not build it again
+    - Incremental Compilation - Only compile the things which have changed and dont re bundle remaining things to save build time
+    - HMR (Hot Module Replacement) - When you save code it should reflect immediately in the website without refreshing manually. It can be at multiple levels. Like auto refresh or refresh just the upadted component/element by detecting the change and so on..So choose the best bundler which has best HMR
+    - Monorepos with tools like Lerna or Nx - When multiple people/teams are working on same repo or code, the bundler should be more optimized and fast
+    - Micro-Frontend Architecture - For faster builds and deployments which improves the developer experience. Also he can manage a small part of App without thinking about other Apps
+
+
+Comparing different Bundlers
+[IMG:77]
+Webpack generates bit of larger bundle if not optimized and build time is huge but still organizations use it as it has lot of customizations/configuration which is useful for huge projects and has large community support
+esbuild and Vite are new and growing fast. These are also good and more faaster builds and small bundle sizes but are not suitable for larger applications

@@ -263,5 +263,98 @@ So what you can do is a build time compression at webpack. That is, you can ask 
 ...........
 - Cache Policy (The repeated requests can be cached. When it coming from cache/memory, in size section on top you can see name as 'memory')
   (cache-control, expire, etag, last-modified)
-- Service worker (To cache in disc cache format)
+- Service worker (To cache in disc cache format, in size section on top you can see name as 'disc cache')
 [IMG:53-55]
+
+
+
+=================
+Rendering Pattern
+=================
+[IMG:56-57]
+1. CSR (Client Side Rendering) - Where your HTML pages are created on the client side only
+2. SSR (Server Side Rendering) - Where you HTML pages are created on the server side dynamically on each request
+3. SSG (Static Site Generation)- Where you HTML pages are created on the server side and are always statis not matter what the request is
+4. RSC (React Server Component)- To put everything on server side is not good and also to put everything on client side is not good. So developers have come up with a mixed approach where critical things are rendered on server side and remaning on client side. This is React Server Component.
+
+
+
+To work on this you need to install next.js
+CSR, SSR and SSG can be done in React/Angular...But RSC can only be done in next.js
+
+Using Page Router - you can do CSR, SSR and SSG
+Using App Router - you can do RSC
+
+Note: In page-router app under pages whatever file you create, it will be added as a route. This is one of the cool features on next.js
+
+**Hydration: Hydration is like adding listeners to DOM. HTML DOM is not interactive. Javascript adds some events to it, which makes it interactive.
+
+
+CSR (Client Side Rendering) 
+---------------------------
+In CSR, everything is done at the client side so there maybe delay in FCP and LCP and it has to create DOM, load JS,CSS make request server, get data and again update DOM so LCP will be delayed
+[IMG:58]
+Check code - csr-page.js
+
+SSR (Server Side Rendering) 
+---------------------------
+In SST, the HTML is created at server side and also the API calls are made to add JS/CSS as part of HTML code. Once this is done then it is sent to browser and browser does the 'Hydration' to add the event to the DOM by parsing the javascript
+[IMG:59-60]
+
+You can do this using next.js by adding a function at the end named - getServerSideProps() which willn internaly makes API calls and to to generate the data and return it to exported component as props in the same file. Whenever this function - getServerSideProps() is added at the end then that component will become a server side rendering component.
+That means, all the code and js parsing, calulations will be done at server side (on the hosted server) and the final HTML page will be sent to the client as a response. This also improves the SEO.
+
+[IMG:61]
+Check code - ssr-page.js
+
+Note: There is a catch here, in order to over optimize at server side, do not do more stuffs (like many more API calls, more DB interactions) which may increase the response time and then there is no point of using SSR.
+
+Note: You should use SSR - getServerSideProps() only when the data is dynamic and whenever you load the component, you want to render at server every time.
+***But what if the data/page is static like Add, blog, article or anything, you dont need to make API call or server rendering everytime. For this you can use SSG - getStaticProps()
+
+****NOTE: It cannot be hosted in CDN like CSR and SSG. It needs proper server environment as it does rendering and execution.
+
+SSG (Static Site Generation)
+............................
+
+What if the data/page is static like Adds, blog, article or anything, you dont need to make API call or server rendering everytime. For this you can use SSG - getStaticProps()
+Because these are static you don't need to make request to server again and again. You can generate this at build time itseld.
+So SSG will generate the HTML page (by calling all the necessary APIs) at the build time itself and stores this Statis Site. When browser requests it at run it directly gives the Final HTML.
+[IMG:62]
+
+You do this using this method - getStaticProps(), which generates the static site and caches it for the pages containing this method
+[IMG:63]
+
+CSR vs SSG vs SSR
+.................
+[IMG:64-65]
+
+
+
+ RSC (React Server Component)
+ ............................
+ With React Server Component, everything by default is renderend on the server side, you just need to choose what to be rendered at client side.
+ [IMG:66]
+
+Check code:
+Example: In the app-router, you want to reneder tutorial.js on the client and its parent page.js (RscPage component) to be rendered on the server as it making all those fetch calls and all.
+
+"use client";
+    This is very very simple. If you want any component to be rendered at the client side just add "use client" at the top of the page.
+    [IMG:67-69]
+
+"use server";
+    There is also something called as "use server";, which you should not put at the top of the page but consciously use at places where you are making fetch calls (which you want to be excecuted at the server) within a function.
+[IMG:70]
+
+ Note: If you have any console.log on the Server Side compoent, it wont be shown on the browser. It will logged at the server only
+ Note: Whatever API calls that are getting executed during Server Side Rendering at the Server, you cannot see those API calls in your browser Network tab.
+ ***Note: It can also reduce the bundle size like when you want to use a library to calculate something, then when you do Server Side Rendering, you can write it in such a way that the library code will not be be include in the bundle but only the computed value will be included in the bundle
+ ***Streaming
+    This is another big advantage of using Server Side Rendering. You can stream data in the form of packets without keeping the user waiting.
+ 
+ ***NOTE: Whenever you are rendering any component in the Server, you cannot use useEffect/useState and all as these are React specific things
+
+ Benifits of RSC
+ ...............
+ [IMG:71]

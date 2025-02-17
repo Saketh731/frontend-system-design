@@ -1,0 +1,228 @@
+=============
+Local Storage
+=============
+
+[IMG:1-3]
+
+Security -  storage (It has limited storage of 5 MB, so if you store more data beyond limit than you might loose data)
+When not to use? - Cross profile (When you use something like Netflix, Prime Videos where there are different Profile and if you store 'Recently viwed videos' or any other profile specific info info in local storage in a genric way then all profiles it will be same info and you will face security issues also)
+                   Also dont use for data requiring frequent changing and updating
+
+Data is persisted even if you close the tab or browser session
+
+Note: Local Storage is domain specific and has a 5MB-10MB size allocated for each domain local storage
+Note: As interaction with localStorage is syncronous and serialization and deserialization (JSON.stingify() & JSON.parse()) may take time and block the main thread if data is huge, so take care of that
+**Note: LocalStorage is not interactive - If you are working dark/light mode using local storage and opened 2 tabs side by side, if you update on one tab to dark mode then local storage on both tabs will be updated but the UI in the other tab will still be in light mode as local storage cant be interactive with UI
+
+
+
+===============
+Session Storage
+===============
+
+[IMG:4]
+
+Data is persisted only while you are in that tab and when reloading in that tab. If you close the tab or browser session, then the data is lost.
+You use session storage to store temporary sensitive data which you dont want to persist after the tab close or session, but only need it while you are working in that tab and at the end want to store it in actual Database by sending it to backend
+
+Security - Session Expiry (When using a session storage, you must set a session expiry as you store sensitive information and not wait till the user closes the tab. Remove data after certain time and ask for something like reauthentication again)
+When to use? - Use it for storing Temporary Sensitive Data (dont forget to set an expiry)
+
+Note: When you or working with session storage on one tab and opened same link in other tab, it wont carry forward the session storage data as it belongs to only one tab
+      **There is a catch here, instead of opening in new tab, if you duplicate current tab, then the session storage data will be carry forward to the other tab as its intial data and next whatever actions you perform on that tab will be independent from other tabs
+
+
+==============
+Cookie Storage
+==============
+    
+[IMG:5-7]
+
+Like LocalStorage and SessionStorage, it is also used to store persisted data.
+But the difference is, the data set in cookie is sent to server automatically through http and you dont need to send it manually like with other storages.
+
+There are 2 types of Cookies:
+1. Session Cookie - It expires on closing the browser session but will be available even after closing the tab
+2. Persistent Cookie - Expires on a deifined expiry. If not set anything then behaves as Session cookie and expires after browser session close.
+                       This you can see when any application asks to remember the password or keep you login. All these use Persistent Cookies behind the scenes to persist the cookie for a month or so.
+
+You can access cookie by doing - document.cookie
+You can set cookie value from client by doing - document.cookie = name + "=" + value + expires + "; path=/";
+Or you can set cookie value from server using - res.cookie("userPreferences", preferences, { maxAge: 3600000 });
+
+**Cookie data can be set by client or server and it gets transmitted via http call
+**From client if you set cookie, the server can read it no matter what. But from server if you set cookie, you have an option to hide the cookie from the client being able to access it. You have that option at server
+
+Security - httpOnly (You can set this props from the server so that the cookie cannot be accessed through any javascript code from the client)
+When to use? - Authorization, light data, User preference data (if that needs to be shared to and used by server as well)
+
+Cookie will be key=value format and multiple cookies will be seperated by semi colon ; and if there is expiry it will have ; expires=sometimein milliseconds - 
+Example: key=value;key=value; expires=sometimeInMilliseconds;key=value;
+
+You can set Cookie from both client and server, check the code
+
+To delete a cookie you need to set the expiry to negetive value like below
+document.cookie = name + "=; Max-Age=-99999999;";
+
+Or if you want to delete all storages (local, session, indexDB, cookie) data on logout, then you can set below header from server on /logout request
+res.setHeader("Clear-Site-Data", '"cache", "cookies", "storage"');
+
+
+
+What is a cookie ?
+A cookie (also known as a web cookie or browser cookie) is a small piece of
+data a server sends to a user's web browser. The browser may store cookies,
+create new cookies, modify existing ones, and send them back to the same
+server with later requests. Cookies enable web applications to store limited
+amounts of data and remember state information; by default the HTTP
+protocol is stateless.
+
+Scope: Cookies can store data that persists across sessions, unlike
+sessionStorage and similar to localStorage , but they have additional capabilities
+such as being sent with HTTP requests.
+
+How does it work and how do we use it?
+Cookies are sent by the server to the client using HTTP headers Set-Cookie)
+and can be read, modified, or deleted by both the client and the server.
+Cookies can also be manipulated using JavaScript. Cookies are transmitted via
+HTTP call.
+Cookies set by the client can always be read by the server however, the
+cookies set by the server based on some configuration(HttpOnly attribute etc.)
+may not be read by the client.
+
+Cookie attribute:
+
+;domain - Secifies the domain within which this cookie is valid 
+;expires=date-in-GMTString-format -  expiry date of the cookie. If neither expires nor max-age is specified, it will expire at the end of session
+;max-age=max-age-in-seconds - maximum age of the cookie in seconds
+;samesite -   SameSite  attribute of a  Set-Cookie  header can be set by a server to specify when the cookie will be sent. Possible values are lax, strict or none
+;secure - If present, the cookie will only be transmitted over secure protocols like HTTPS.
+;httpOnly If present, the cookie is inaccessible to JavaScript's document.cookie
+
+
+
+=================
+IndexedDB Storage
+=================
+
+[IMG:8-11]
+
+Data is persisted across browser sessions like local storage
+
+It stores in the form of key value pairs and value can be anything (unlike in other storages where it has to be only string)
+
+When to use? - Use this for large data and dont use for small data. You can use it for offline suport
+When not to use? - Dont use for secure data and for small data
+Example places to use - You can use them in Whatsapp web to cache initial data, teams, google docs...
+
+**Note: It is Asyncronous - non blocking (unlike other storages)
+
+It is hard to write code using pure IndexedDB docs. So you have a package called Dexie.js to mak things simple for you.
+
+You store dat in indexedDB almost like sql table, where you have a database and inside it you have table and its column, primary key. You can also do indexiing to imporve performance like in SQL database
+
+
+
+=============
+Normalization
+=============
+
+[IMG:12-15]
+
+Normalization of data is like flattening and simplifying the data. 
+Advantages
+    - Removes Duplicacy/Redudency (Let say in a Student object if you keep college object and if there are 1 lakh Students from same college, you are creates 1 lakh college objects inisde it. Instead if you keep the entities seperately by maintaining the rElationships with unique id, it is more efficient)
+    - More Efficientv (As it is easy to access a flatten object than a network object. Improves time complexity)
+
+
+
+============
+HTTP Caching
+============
+
+[IMG:16-21]
+
+HTTP Caching is done from server side
+
+It is used to cache STATIC ASSETS like CSS, JavaScript files, images, fonts, and HTML pages.
+
+This is very close to the Network Layer. Just before the request hits the server, we can cache the data using HTTP Caching.
+Before you try to get any resource from server, browser first checks it in browser cache. If there in browser cahce, it fetches from there, else it requests from server and sotres in the browser cache for future requests
+
+
+If you want to do HTTP Caching, you need to set either 'Cache-Control' header which sets the max-age in seconds or 'Expires' header, which sets the expiry in date like below
+res.setHeader('Cache-Control', 'public, max-age=86400');
+res.setHeader('Expires', 'Sat, 23 Dec 2023 11:20:39 GMT')
+
+When you set either of the headers for one hour or one day, you can see the resource (image or anything) is coming from the 'memory cahce'. You cam see it under 'size' section in Network tab.
+This comes from the memory cache only for the next one hour/day as per what you set in the headers.
+
+**There is also 2 headers which you can use:
+1. lastModified: This sets the lastModified date of your memory cache. You need to set it from server as true. When you make a request to server, instead of getting from memory cache it first check from server lastModified, if client lastModified is only more or equal then server will redirect the request to fetch from memory cache with status code 304 (which is redirection). Else it sends new resource with 200 status code
+2. etag: eta is a hash code of the resource content. If the resource content change then the etag hash value changes. You need to set it from server as true. When you make a request to server, instead of getting from memory cache it first check from server etag value, if client etag mathces with server etag value, then server will redirect the request to fetch from memory cache with status code 304 (which is redirection). Else it sends new resource with 200 status code
+
+Example:
+  express.static(path.join(__dirname, "public"), {
+    etag: true,
+    cacheControl: false,
+    lastModified: true,
+  })
+
+
+Priority:
+  Cache-Control: P0
+  Expires: P1
+  lastModified: P2
+  etag: P2
+
+
+Note: If you want to get new data server instead of from memory cache for certain request, then you can tweek the URL by adding some random query param to it at end, which browser treats as different URL and does not get from Memory Cache and instead gets from the server
+
+
+
+==============
+Service Worker
+==============
+
+[IMG:22-25]
+
+It acts as a proxy and sits between client and Network layer. The request will pass through it and it will decide whether to make request to the Network or the Cache
+
+You can view the domain specific Service Workers in the Application tab
+
+You need to create the Service Worker at server:
+1. You need first give the cahce name - (Done at server)
+2. Mention the file paths(assets) that you want to store in cahce - (Done at server)
+3. Install phase - where you will open catch and will download and cache all the mentioned paths - (Done at server)
+4. Register the Service Worker mentioning the service worker sw.js file path - (Done at client)
+5. Write code in Service Worker (sw.js) to add an event listener to the fetch call to be listened which, when fetch request is made, it first looks into the cahce and if a cache exists then return the response from the cache else return from the server by triggering the fetch request 
+
+**If a resource is coming from the Service Worker cach, you can see it in Network tab under size as 'ServiceWorker'
+
+Note: Before it tries to reach the Network, check the headers and network cache, Service Worker first acts as a proxy and redirects it to its cache
+
+
+===========
+API Caching
+===========
+
+In Memory Storage - (That means, if reloaded the screen then the memory/data is going to be vanished)
+
+[IMG:26-27]
+
+To take it to another level you can do API caching of GET requests at the client code in memory cache of the library that you are using (like example Apollo Cache)
+
+Example Libraries:
+ - ReactQuery
+ - SWR
+ - Axios
+ - Apollo Client
+
+
+================
+State Management
+================
+
+[IMG:28-34]
+
+In Memory Storage - (That means, if reloaded the screen then the memory/data is going to be vanished)

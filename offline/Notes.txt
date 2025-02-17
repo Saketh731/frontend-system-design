@@ -1,0 +1,76 @@
+==============
+Service Worker
+==============
+
+It acts as a proxy and sits between client and Network layer. The request will pass through it and it will decide whether to make request to the Network or the Cache
+
+You can view the domain specific Service Workers in the Application tab
+
+You need to create the Service Worker at client:
+1. You need first give the cahce name - (Done at client)
+2. Mention the file paths(assets) that you want to store in cahce - (Done at client)
+3. Install phase - where you will open catch and will download and cache all the mentioned paths - (Done at client)
+4. Register the Service Worker mentioning the service worker sw.js file path - (Done at client)
+5. Write code in Service Worker (sw.js) to add an event listener to the fetch call to be listened which, when fetch request is made, it first looks into the cahce and if a cache exists then return the response from the cache else return from the server by triggering the fetch request 
+
+**If a resource is coming from the Service Worker cach, you can see it in Network tab under size as 'ServiceWorker'
+
+Note: Before it tries to reach the Network, check the headers and network cache, Service Worker first acts as a proxy and redirects it to its cache
+
+
+
+
+Service Worker will run on a seperate thread and will not block the main thread
+Service Worker only works on HTTPS. Because it acts as a proxy and acts as a middle person taking all the request before hitting server, there can be chances of middle in the man attacks so it is a must to have HTTPS to use Service Worker
+Service Worker has compatible issues, like it may not work in old browsers and in few mobiles
+You can do push notifications and background sync APIs using Service Workers
+**It is an event driven worker
+**Service Worker cannot access the DOM as they run on a seperate thread. Also they do not have access to storages like, session, local, cookies..
+
+
+
+===================================
+PWAs (Progressive Web Applications)
+===================================
+
+PWA is like a combination of Web App and mobile App. **They are websites that behave like an app.
+
+PWAs use Service Workers to give the offline experience.
+
+Web Apps has its own issues
+    - Like tough to remember website url 
+    - No offline support and Push Notifications (now a days we have due to Service Workers and PWAs)
+    - World is moving towards mobiles
+    - Mobile native apps are easily on homescreen accessable unlike web apps
+
+Mobile native Apps has its own issues
+    - Hard to find our apps in app store
+    - No SEO for apps
+    - Installation headaches
+
+
+Advantages of PWAs
+...................
+- Easy to discover (through google search)
+- Can improve SEO of PWA Apps
+- It have homescreen access when downloaded (just like an icon beside your instagram)
+- Offline experience
+- Push Notifications
+- Background Sync (ex: on whatsapp if you send a message when you are offline it wonr send, but when you are back online, on the background it will make the request automatically to send the message. This is called background sync)
+- Look & Feel (UX)
+- Responsive and Mobile first experience
+- No installation required
+- Access to Mobile APIs (ex: access to camera, access to mobile motions etc..)
+
+**Note: You can detect a PWA app in the browser by seeing beside the URL, you will have a download option
+**Note: Even mdn docs is a PWA
+
+
+manifest.json
+    - To make you web app also as a Progressive Web App (and to have that download option at the URL), you need as add this manifest.json file in your code.
+    - You can generate manifest.json through some online website by entering the info. It will generate manifest.json code for you.
+    - This file consists of all the details of your PWA app, like Icon info, App name info, theme color, background color and so on..
+
+
+Go to below website to see what all things PWAs can do today
+https://whatwebcando.today/

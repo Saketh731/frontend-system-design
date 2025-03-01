@@ -1,0 +1,101 @@
+====================
+Logging & Monitoring
+====================
+
+1. Collect
+2. Monitor
+3. Fix
+
+
+1. Collect (Telemetry)
+......................
+a. Performance Metrics
+    - Metrics: Web Vitals, API response time, feature/scenario time, Resource timing
+    - Paint Timing, Network, Frame Rates
+
+b. Resource Errors
+    - 5XX, 4XX
+    - API failure
+    - Network Error (like slow network, no network, so based on this you can decide whether to provide offline support for users or not)
+    - Client Exception
+
+c. User Interaction
+    - Click
+    - Scroll
+    - Form Submission
+    - Browser Events (To get to know about Accessibility)
+
+d. Resource Utilization
+    - Resource Usage (CPU, Memory)
+
+e. Custom Events
+    - Purchases
+    - Feature Usage: Login (like google login, linkedin login etc..)
+
+
+
+
+Tools
+    MS Metrics
+    Google Analytics
+    Sentry (You can get exact JavaScript errors including file name and line number)
+    Open Telemetry
+        - Web Vitals
+        - You can track number of users / live users
+        - Device type used
+        - Browser used
+        - Referrer
+        - Popular pages
+        - Countries
+        - Javascript errors
+        - **User Session Recording
+        - **Heatmaps: This shows you the page and click numbers/percentages at different portions/areas of the page. It also tells you about error clicks (that is, if any click broke the page)
+        - You can see all the console messages (logs, warning, errors..)
+        - You can see the redux store at every point    
+
+Correleation Id: A unique id accross all systems (client to server to another server to DB). Using this you can track error down accross various systems involved
+
+
+
+
+2. Monitor (Alerting)
+.....................
+There are 4 steps in Monitoring:
+
+a. Event Metrics
+    - Click events, errors, API erros, Network fails...
+b. Set Thresholds (It can be for Performance, Resources, User actions (If user is trying to do certain number of click than maybe he is trying to do some malware attack))
+    - If performance/initial load is taking more than 900ms than it is critical.
+    - If CPU usage goes more than 80% than it is a high alert 
+c. Threshold Exceeds
+d. Alerts (Sometimes if you are not able to do transaction, took more time or quit in between than you may get call saying they will help you)
+    - Mail
+    - Slack
+    - SMS (for P0 critical things)
+    - Pager Duty (Application like Squadcast, Zenduty provide this mechanism): If the Threshold Exceeds you can get mails and all in your system
+    - OnCall (For how many days which person will be responsible to monitor and track these things. That means, all the alerts, incidents, errors will be assigned to those people)
+
+Incidents: Anything which is raised as an Alert is called an Incident
+
+
+
+
+3. Fixing
+..........
+Fixing has 4 steps:
+
+a. Prioritize
+    - You cannot fix everything at day 0. Prioritize things to P0,P1,P2,P3
+b. Debug
+    - Source Map
+    - Session Replay (Most of the companies allow this but few may not allow due to security issues)
+c. Mitigation
+    - Rollback
+    - Hotfix
+d. Prevention
+    - Unit Tests
+    - Linting
+    - Type checks (using TypeScript)
+    - Proper PR Review
+    - Rate Limiting features (Like debouncing etc..)
+    - Security and Performance Scan (Usually setup in CI/CD pipelines)

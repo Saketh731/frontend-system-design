@@ -1,0 +1,25 @@
+=============================
+Instagram (Photo Sharing App)
+=============================
+
+[IMG:2-16]
+
+Image Optimization
+..................
+webp format - webp requires less number of bits per pixel. WebP images are 30% smaller in size compared to PNG and JPEG 
+srcset attribute - Allows you to specify different images (with different resolutions) for different screens
+userAgent - Gives information about the browser, OS and all so that based on that you can decide the image size/resolution
+dpr (window.devicePixelRatio) - The number of pixels that are there on the actual device for each CSS pixel. By using this you can decide to give more or less pixels
+                              <meta name= viewport content= width=device-width initial-scale=1.0/> - This will set the devicePixelRatio to 1
+Device/Internet connectivity -  Based on the internet connectivity (2G/3G/4G/5G) we can show low to high resolution images
+Prefetch images
+
+
+Feed Optimization
+.................
+Infinite Scroll (using IntersectionObservable API) - Instead of increase DOM divs you can remove the div which are out of visible area and add new div while doing Infinite scroll using a concept in Javascript called 'IntersectionObservable' -> new IntersectionObservable(). This work for both fixed items and dynamic items.
+Virtualization -  This is also gives the same advantage as IntersectionObservable, but it used a different technique. We can use third party libraries for this
+Preserving Feed Scroll Position - When you scroll to a random position and navigate to different screen or close the app and come back to same screen again, then you will land at the same scroll position. You can do this by - let scrollPosition = window.scrollY; window.scrollTo(scrollPosition); You can do this using useLayoutEffect() and useLocation() hooks
+                    useLayoutEffect - useEffect happens asyncronously without interfering the pain as it happens after the layout decision and the paint. But the useLayoutEffect as the name says happens between the layout decision and the paint. So it interrupts and happens syncronously. This is used for going to the scroll position or adding top/bottom 10px to DOM after rendering. If you do it with useEffect, you can see the initial oosition and shift later as useEffect executes after render and paint. In this case if you use useLayoutEffect, you will not see that shift.
+Optimistic Updates - This means, once you create a post (or did anything), you will do the process to send it to server and all in the background so that the user will be unblocked to do any other actions like deleting post and all
+Web Workers - If you want to do some complex this like editing and all, you can do it in seperate thread without blocking the main thread

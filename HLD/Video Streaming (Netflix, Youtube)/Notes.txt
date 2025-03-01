@@ -1,0 +1,57 @@
+==================================
+Video Streaming (Netflix, Youtube)
+==================================
+
+Video Streaming Terminologies
+-----------------------------
+Streaming - Generally you fetch images (jpg, webp, png), text etc.. at once and show it in the UI. But you cannot do this with Videos(mp4) always. If the video size is too big like in GBs (movies in Netflix), you cannot fetch entire video at once. You will have to do it in chunks and stream those chunks. This is called Streaming.
+Buffering - You fetch the future chunks in advance while the video is playing so that you dont have to wait for the future data. If you skip or if network is slow you will see a buffer (loader) which means that the chunks are still being fetched
+Bit Rate - Amount of data that can be downloaded per second. Better the network, you can download larger chunks per second so better Bitrate
+Frame Rate - Number of frames rendered per second (Ex: 24fps, 30fps,, 60fps)
+Resolution - It talks about the video quality (140, 720, 1080, 4K ....). That means number of pixels to show in the given video width x height
+Codec - When you exchange chunks between clinet and server, the chunk transfer is done in encoding and decoding manner. This used algorithm like H.264, H.265(HECV), VP9, AV1
+Bandwidth - The internet speed. Ex: 100mbps, 200mbps. That means, how much mb it can download per second
+Poster - Thumbnail image
+Closed/Open Caption - Few captions you can toggle on and off are called closed captions. Few caption you dont have contol on, it will be thre in the video no matter what. These are called open captions or embeded captions
+Playback controls - All the controls on the video like, Play button, Pause button, Next button, Volume button, Mute/Unmute button, Autoplay button, Video configuration button, Resolution button and so on.
+Seeking - When you click on any part of the video, it should play from there. This is called Seeking
+Scrubbing - When you drag on the video to certain points to play from there is called Scrubbing
+Manifest File - It gives the Metadata information about the chunk. Like the timeframe, quality, url and so on. (If internet gets slow, then next chunks can be loaded with low quality / resolutions)
+Subtitle File - Subtitle and Caption files and their formats like SRT (which has text and timestamp), TTML(which loads in the form of XML), SCC, WebVTT
+
+
+blob (blob url) - You dont fetch video in the form of mp4 as it takes time. Yu generally fetch it in the form of binary data as the transfer will be fast and then convert that to blob url from clinet side and show the video. This blob urls are catchded on the client and resued instead of fetching chunk again. If the blob are not in use and wasting memory then they are deleted
+
+High level understanding of how things work to get data: You fetch list of sections with video ids in each section (with infinite scroll) and using these ids you make call to backend to get all videos binary for each section(by sending metadata like vedioid, bandwidth etc..) and this binary you convert it to blob at the client side
+
+webm - Better tham mp4 as it has better compression, so encoding and decoding can be faster. But it is only supported in web
+
+Video Player
+............
+
+1. HTML Video tag
+    - This comes with lot of cool feature like streaming, poster, prefetch and all. But still has many missing customizatoins like:
+        - Limitited adaptive streaming support
+        - Limited customizatoins
+        - Need two way sync in libraries (Example if you use React, you need to sync your jsx video componetn with html video component inn browser at every second position and all which is time taking)
+        - No support for Advance features
+        - It just appends the source file like .webm, .mp4 i src
+2. MediaSource API
+    - To overcome the HTML video tag drawback we come up with MediaSource API. This also undehood generates a video html tag, but add all the API added features. It dosent just directly append the source tag, instead it takes the ArrayBuffer (binary data) as input and converts it into blob url and all and plays it
+    - It comes with many customizations
+3. Other third party libraries are there but you can get every with MediaSource API only
+
+
+Performance
+...........
+
+MediaCapabilities API - To understand which Codec is supported in which APIs
+Buffering Time - When page in inactive like you moved to other tab then do not buffer (load next chunks) in the video
+Network Efficiency - Load the bit or the chunks based on the Bandwidth
+Lazy Loading - Before the videos are visible on the screen (I mean beofre doing infinite scroll) do not load thumbnail videos
+Seperating Audio & Video - Advantages are, for lower bandwidth we can have high Audio quality and low Video quality. And load on API request will be less if we fetch them seperately and if there is change in languages we can just fetch only audios seperately instead of fetching same video along with it unnecessarily
+Thumbnail Optimization (hovering through the video you see images) - Instead of fetching individual Binary data and converting them to Blob to show images like in Netflix, we can fetch all the images at once in a single image combined in one request call and show the portion that is required at a particualr time which is called Sprite (Youtube does this)
+Bandwidth Optimization - If the bandwidth is less than do not auto play video, just show the thumbnail
+Buffer Sufficiently - Do not pre download/buffer all the data when paused as it will waste the data. Download cleverly when user is reaching some points then download minimum amount of next chunks
+Memory Usage - Keep an eye on the memory and the RAM and do not fill up Blob with many images. Keep cleaning the Blobs when images are not in use, else it will crash the system
+ 

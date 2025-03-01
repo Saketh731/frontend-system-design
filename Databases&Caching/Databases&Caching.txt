@@ -191,9 +191,9 @@ It acts as a proxy and sits between client and Network layer. The request will p
 You can view the domain specific Service Workers in the Application tab
 
 You need to create the Service Worker at server:
-1. You need first give the cahce name - (Done at server)
-2. Mention the file paths(assets) that you want to store in cahce - (Done at server)
-3. Install phase - where you will open catch and will download and cache all the mentioned paths - (Done at server)
+1. You need first give the cahce name - (Done at client)
+2. Mention the file paths(assets) that you want to store in cahce - (Done at client)
+3. Install phase - where you will open catch and will download and cache all the mentioned paths - (Done at client)
 4. Register the Service Worker mentioning the service worker sw.js file path - (Done at client)
 5. Write code in Service Worker (sw.js) to add an event listener to the fetch call to be listened which, when fetch request is made, it first looks into the cahce and if a cache exists then return the response from the cache else return from the server by triggering the fetch request 
 

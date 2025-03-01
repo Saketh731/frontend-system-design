@@ -1,0 +1,30 @@
+===================================
+News Media Feed (Facebook, Twitter)
+===================================
+
+- In posts feed page, initial feed (Above the fold) will be loaded through SSR and remaining content through infinite scroll will be loaded by CSR
+- In offset pagination you get duplicate (if new posts added from top) or missing data (if few posts deleted). 
+  So you use Cursor pagination where you get next set of data based on id. Now even though new data gets added at the top, you will only see old 
+  data in the infinite scroll. You can never see new data until you give 3 options to users: 1. Ask to reload page to see new data, 2. Show reload symbol at top, 3. Automatically reload the page
+- Throttling is used for Infinite scrolls for optimizing performance. Because when user comes to the end of page we cannot write deboucing to see if user stays there for certain amount
+  of time then fetch data (because user can scroll up and down and again setting even and to wait when he reaches back to end of page).
+  Best way is to do Throttling, where if user reaches end of the page make an API call after 300 ms (meanwhile user can scroll up and down and come back to same end of page but we do not make api call again in mean time till the time period is completed)
+- Intersection Observer API: It will inject an invisible div and when that that div comes into the view or when it is visible then the API will trigger call to fetch new data. Also you can write logic to replace the existing divs with new set of divs without add extra divs by increasing the DOM size
+- Virtualization: This is a library which internally uses Intersection Observer API and helps to maintain a fixed DOM size of list of divs. The new data will only replace the existing divs and will not add new divs after a limit
+  Advantages of Virtualization
+    - Less Browser Painting
+    - Virtual DOM Reconciliation will be fast
+    - Light Weighted Real DOM
+- Mentions(tag people) & Hashtags
+    - We cannot use input or text area for this as it osent offer making text as bold and other cool features
+    - contenteditable: You can make a div editable using <div contenteditable="true">Some text</div> This will give some cool features like bold and all but still dosent have tagging and other capabilities
+    - WYSIWYG: This library works as a rich text editor which will create HTMLs based on the text you entered. As it is a Rich text editor, there can be chances of of XSS attacks as user can inject HTML and send it to server. To aoid this we can generate HTML at frontend only after rendering. Like if we have hastag #livelife (for this you can generate anchor tag at frontend). If you have tags like @sakethid you can maintain a pattern like [[@sakethid: Saketh]], if you find this pattern you can render a link tag in DOM from client side
+    - draft.js: Used by Facebook for the customized styling of texts. It is another Rich text editor
+    - slatejs: It is also another Rich text editor
+- Optimistic Update: When you want to post something, it will take time send it to server and get response. But these posts on twitter, facebook are very fast. This is because they do Optimistic Updates. That means they show post on frontend immediately when you click post, but to server it will send in the background. Now to show in UI in between the list, you need ID (so that user can edit or delete it). So for this you create a temperory id in frontend till you get the response from server and replace that temp id with real id.
+  We have several libraries that support Optimistic Update, Ex: ReactQuery, ApolloClient, SWR
+- Timestamp Rendering (how to show Timestamp of when posted, like 1 sec ago, 2 sec ago, 1 day ago. Also how to show different timestamps for different regions)
+    - Server: Can be done from server, where server gives you Timestamp for different regions
+    - Client: Can be done from client. Server sends you time in UTC for and on clinet you convert using Intl.DateTimeFormat(..) by giving the region.
+    - Relative Time Rendering (like 1 sec ago, 2 sec ago, 1 day ago): You do this by setting setTimeout() on the frontend so that the time keeps changing.
+- Sprite Images: Used to show group of icons. Instead of fetching seperately with each request, we can fetch them together at once as an image and using css we can show the part of which we want (that is, single icon)

@@ -169,7 +169,7 @@ So now instead of making this same connection again and again for each request, 
 
 - dns-prefetch
     Now in some cases our job/request may happen much later so we do not need to setup entire connection at the start itself. So we can setup a part of it like just a dns connection like below
-    <link rel="preconnect" href="https://cdn.glitch.global" crossorigin /> 
+    <link rel="dns-perfetch" href="https://cdn.glitch.global" crossorigin /> 
 
 - preload
     Now when you have any banner image, which you want to reload at start only, those you can ask to preload by not just establishing connection, but also makig the request and getting data before itself like below

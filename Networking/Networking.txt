@@ -5,7 +5,7 @@ Server => Even your latop/system can be a server. Server is nothing but a machin
           But our local server is not reliable as it can shut down any time. Has less memory space, CPU, RAM. So we take big server which is available 24/7.
 
 IP Address => Lets take an example of you ordering a pizza from Dominos. When you call the dominos person for giving order, first they will ask you after taking order 
-              is you address. That is pincode. Based on that they will get to know nearby Dominos and they can deliver it.
+              is your address. That is pincode. Based on that they will get to know nearby Dominos and they can deliver it.
               Similarly web also has something called IP Address. Every devices that wants to interact with other device should have IP Address. Like using IOT if you 
               want to turn of your fan at home sitting at office, you are able to do it through IP Address. (IP Address: 152.222.122)
 
@@ -13,11 +13,11 @@ Domain Name => Its a name given to IP Address to remember easily.
 
 [IMG:1]
 When you search Google.come from Phone -> Cell tower -> Phone Company -> DNS (Domain Name System, which return the IP address back to phone)
-Now using IP address cell towers will know which server to send the request to. Phone -> Cell tower -> Phone Company -> Site (Server, takes the request and return the response, basically htmk, css, js)
+Now using IP address cell towers will know which server to send the request to. Phone -> Cell tower -> Phone Company -> Site (Server, takes the request and return the response, basically html, css, js)
 
 [IMG:2]
 In more deeper level, we previously using LAN connections (Telephone lines) connected to computer for internet. Basically there will be ISP (Internet Service Provider) like
-BSNL, ACT Fibrenet etc.. which provides you a Telephone line, whichis connected to Modem and from Modem there is a connection to Router, and Router to computer.
+BSNL, ACT Fibrenet etc.. which provides you a Telephone line, which is connected to Modem and from Modem there is a connection to Router, and Router to computer.
 So this ISPs like BSNL,ACT Fibrenet are responsible to take the request from the computer and interact with the internet to pass the request and get the response from right Server
 
 Internet -> ISP (BSNL, ACT Fibernet) -> Modem -> Router -> Computer

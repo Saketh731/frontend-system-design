@@ -1,0 +1,20 @@
+[IMG:1-2] in PhotoSharing folder
+
+Step 1: Requirement Analysis
+            - Functional Requirement
+            - Non Functional Requirement
+
+Step 2: Architecture Design
+            - Client (View, Controller, Services, Storage)
+            - Server (API Gateway, APIs, DB, Cache, CDN)
+
+Step 3: Component Architecture
+
+Step 4: Data Modal
+
+Step 5: List of APIs (GET/POST/PUST/DELTE/PATCH) with Request and Response
+
+Step 6: Optimization/Security...
+
+Step 4: Implementation
+

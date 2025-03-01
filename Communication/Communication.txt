@@ -59,7 +59,7 @@ Use cases:
 1. Analytics
 2. Financial trading
 3. Online gaming
-4. Rea; time collabs like - Google drive, Google docs
+4. Real time collabs like - Google drive, Google docs
 
 Explanation of how it works:
 1. Install scoket.io. Create websocket connection on server by wrapping the http server within the websocket server

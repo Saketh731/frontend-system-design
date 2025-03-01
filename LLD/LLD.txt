@@ -1,0 +1,86 @@
+Component Design
+................
+Single Responsibility Principle
+
+Config Driven using
+...................
+
+It helps in
+    - Readability
+    - Modularity
+    - Reusabilit
+
+Very minimal changes from the UI and based on backend the UI will be decided (including sections, sometimes sizes/paddings and all)
+
+
+Routing
+.......
+
+- If the Routing is complex and keep changing (code chanegd to differnent route) it effects the SEO. As search engine crawler does indexing of all the Routes and finds it difficult to find the new route
+- Also it effects the user experience if he bookmarks certain URL paths. I fyou change the route than again you need to redirect the old route to new route which is not an ideal solution
+** - As a Senior Software Engineer, you need to be cautios about ROutes and be clear of what all Routes application will have, when you are designing the architecture itself
+
+** - What does it mean by Google Search Crawler not finding the APP - Lets take example of Namaste Dev website. WHen you search Namaste Dev on goooogle search, it will show you the page. But if you search Namaste frontend Search Design, it will not show up on search engine page accurately (SEO) if the route for Namste Frontend System Design is not defined
+
+** - Dont complex routing. Keep it as simple as possible
+
+**Protected Routes
+    - Users should not be able to access few routes if not authenticated. They should be redirected to login page
+    <ProtectedRoute>
+        <Home />
+    </ProtectedRoute>
+    // ProtectedRoute is a component having logic for redirection if not authenticated else return Home.
+
+
+
+Infinite Scroll
+...............
+document.body.scrollHeight - Gives entire/total view port height of the web page (including the scroll space)
+window.innerHeight - Gives height of the visible window
+window.scrollY - Gives how much height you scrolled so far
+
+If you want to find out whether you reached end of the page check this condition - window.innerHeight + window.scrollY ===  document.body.scrollHeight
+
+useEffect(()=>{
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+},[])
+  
+const handleScroll = async () => {
+    if (window.innerHeight + window.scrollY === document.body.scrollHeight) {
+      await fetchMemes();
+    }
+};
+
+
+
+Pagination
+..........
+Pagination is good if you want to navigate between pages, if you have finite data, a structured data. Else Infinite scroll is better as it is for Real time dynamic data, for addictive apps, mobile friendle. But Infinite scrollis is bad for SEO and for searching.
+Recently Google search has moved to Infinite scroll from Pagination.
+
+Frontend Pagination
+    - Fetches all the data at once.
+    - Sort, Search... everything will be on frontend
+    - Best for small data
+
+Server Side Pagination
+    - Fetches data per page and also sometimes the page numbers and the number of items to be shown on each are also decided by the server
+    - Sort, Search... everything will be on backend
+    - Best for large data
+    Offset Pagination: 
+        - /products?page=3&count=20 (here page=2 is called the OFFSET and count=2 is called the LIMIT)
+        - /products?offset=20&count=10 (So here as offset is 20, it will skip the first 20 records request the records from 20-30 as the limit is 10)
+    Cursor Pagination:
+        - Problem with Offset Pagination: When you are moving between pages and stayed on a page for a while and in that time if new data gets added to the previous page the when you move to next page you will see duplicates. Else if some data gott deleted in previous pages and when you move to next page then you might miss some data when you send offset as the count chanegd. To solve this, Facebook came up with Cursor Pagination concept, which is best for Real Time Data.
+        - How it works: Instead of sending offset and limit, it will set cursor and limir to the server. Cursor is a unique identifier of an element. (It can be id, timestamp etc..). So if we consider cursor as unique id, if it points a record with a unique id 7 and send cursor as 7 then and limit as 10, then server will return 10 records from the id 7. So it will never be duplicated as it is telling from which id it needs data. Eve if few records got added or deleted on previous pages, it will fetch the records from 7 to next 10 records and records will not be duplicated or missed. 
+          Ex: /products?cursor=7&count=20 (here 7 is the row/item id)
+        PROS
+            - It is for Real Time (Dynamic) Data. That is why all social media platforms like Twitter, linked and all uses Cursor Pagination
+            - No skipping/missing/duplicate of entries
+            - Faster than Offset Pagination (This is because its easy to find the element by id from div and return the next 10 items, instead of finding the total count and looping to find the offset record and all which is kinda complex algorithm and takes time)
+            Cursor Pagination: O(1), Offset Pagination O(n)
+            - Best suitable for Infinite Scroll
+        CONS
+            - Does not keep a track of pages, so cannot use it if you have pages kind of thing
+            - No option to sort (as we give the record id from which we need next record. If you do a client sorting and to map that with backend it will be complex). That is why in social media apps Infinite scroll, you dont see sorting option

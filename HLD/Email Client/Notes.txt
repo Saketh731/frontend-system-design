@@ -1,0 +1,6 @@
+POP - Single client. Once the mail is sen, it will be deleted at server
+IMAP - Multiple CLient. Mail is retained and not deleted at server
+
+Flow:
+.....
+MUA(Outlook Client) --> Server ----MTA (uses SMTP) --> Mail Server (Outlook) --> Mail Server (Gmail) <----(IMAP/POP)---Server<---Gmail Client

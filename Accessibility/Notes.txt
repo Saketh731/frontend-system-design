@@ -1,0 +1,165 @@
+[IMG:1]
+
+Accessibility - ally / a11y (A11Y)
+
+Web apps are by default accessible friendly...but the way we develop them make them Inaccessible
+
+
+Disabilities [IMG:2-3]
+.......................
+1. Touch - One arm, New Parent
+2. See - Blind
+3. Hear - Deaf, Ear Infection
+4. Speak - Non verbal, Heavy accent
+
+
+Assistive Technologies
+.......................
+1. Keyboard only
+2. Screen Reader - (In Mac, go to setting and click Accessibility and enable VoiceOver option. Whenever you select a text Mac gives Voice over)
+3. Mouse and Pointer devices
+4. Touchscreen Gestures - (Zoom in, double tap etc..)
+5. Screen Magnifiers - ('Option' + 'CMD' + '+/-')
+
+
+Accessibility Standards
+........................
+WCAG (Web Content Accessibility Guideline)
+1. Level A
+2. Level AA
+3. Level AAA
+
+Website - WebAIM's WCAG checklist => Here you can find all Level A, AA, AAA requirements
+
+WCAG Principles
+   - Perceivable (can be consumed by everyone)
+   - Operable (should be able to navigate between pages, find form and fill it)
+   - Understandable
+   - Robust (Same accross all the systems/laptops)
+
+
+
+=======================
+Screen Reader [IMG:4-10]
+========================
+We have inbuilt screen readers in Mac/Windows
+But people pref with other screen readers for more features and better help (Ex: Jaws, NVDA, Chrome extensions etc..)
+Turn on VoiceOver in Mac, Do - "Ctrl + option + U" (Landmarks) => we get all the Form controls after doing this, with the help of it you can navigate in the screen with VoiceOver
+[IMG:6]
+"Ctrl + option + U"  - (Landmarks)
+"Ctrl + option + H"  - (Headings)
+
+
+
+For better Screen Reader access, take care of below:
+[IMG:7]
+Accessible HTML
+................
+1. Semantic Tags (we will get all the headings under Header section when we use Header semantic tag)
+2. Aria-labels
+3. Images - alt attribute in images (if you dont want an image to be narrated by screen reader (which is just for decorative purpose), do => alt="" (or) aria-hidden=true etc..)
+4. Do justice to list li, ol, button, anchor tag <a>, tables, label etc.. instead of replacing it with a div
+5. Audio/Video - Caption for Audio/Video
+6. CSS hidden class technique
+
+[IMG:8-10]
+ARIA (Accessible Rich Internet Application)
+............................................
+With the default capabilities if our applications are not rich enough (even with the Semantic tags and with default browser feature like discussed above) then we can use ARIA.
+Creates AST Tree like DOM tree. (You can see in Elements Tab) [IMG:8]
+
+There are 3 types in ARIA: [IMG:9-10]
+1. Roles (role = "button") (use button/checkbox etc...and avoid using role="" whenever possible)
+2. Properties (aria-label, aria-labelledby, aria-describedby)
+3. States (aria-pressed)
+4. Live Regions (If there is a dynamic div. ex: on form submit if validations fail we show error..how do we notify users about this error?)
+     - aria-live="assertive | polite | off" (assertive: when error comes, it stops prev voice and voices error. polite: it waits for prev voice to finish)
+     
+
+
+
+
+===========================
+Focus Management  [IMG:11-13]
+===========================
+1. Tab Navigation: [IMG:11] (If you use metatags like <select>, <button> etc..they by default support tabbing, arrow down etc.. Do not use tabIndex, it changes sequence in bad way. If you want something to be focused give tabIndex=0, like for a div, so that it follows default DOM tree order, while voicing)
+
+2. Keyboard Shortcuts: [IMG:12] (You can implement using normal JS by adding eventListeners for onKeyUp)
+
+3. Skip Links: [IMG:12] (Skip to main content links) (The way you do it it - <a href="#skipId" class="hidden">, Also Hide the link using css, only when :focus make display to 'block' again, that is visible only on tabs)
+
+4. Active Elements [IMG:13] (Before opening a Modal, you store previous active element so that once you close the modal, you can focus back on that element)
+
+5. Tab Trapping (While tabbing in Modal, you may go outside of that Modal, and you will miss the flow and get trapped somewhere else. You handle this using JS - If key is tab, store last focusable element and when you reach that, on next tab, shift focus back to the Modal)
+
+6. Page Navigation (use Skip links, aria-live (as in CSR elemts will be changed on client side), contentElement.focus() first element in the page by default)
+
+**Note: Never do "outline: none", because focus will never come to that element
+
+
+
+==========================
+Color Contrast [IMG:14-15]
+==========================
+Take care of color contrasts (darker mode more color contrast)
+Change color theme based on user preference on site. **Also using media query check what is default system/laptop colot preference and chagne theme accordingly.(@media (prefers-color-scheme: dark))
+Discuss with your designer and get all color contrasts for all states like - when button is active, when hovered, when focused, when default, when disabled
+
+
+
+====================
+Accessibility Tools
+====================
+1. Automation
+    - AXE (for Windows)
+    - Espresso (for Android)
+    - eslint-plugin-jsx-ally
+    - Accessibility plugin (framework specific for CI/CD pipeline integration)
+
+2. Manual
+    - Lighthouse
+    - Deque's Axe Tools (chrome extension which we can see in devtools like Redux)
+    - Elements tab in devtools
+
+3. Out of box
+    - If you use frameworks like material UI, fluent UI etc.. for components like calendar, button etc... these give accessibility support by default
+
+
+
+
+======================
+Quick Checks (Summary)
+======================
+[IMG:16]
+1. Use Semantic Tags
+2. Add labels to form elements
+3. Use Contrasting Colors
+4. Write descriptive links (<a>React Native Docs</a>)
+5. Keep pinch and zoom alive (<meta name="viewport" user-scalable="yes">)
+6. Provide text for non-text content (alt for images, charts etc..)
+7. Show where your :focus is
+8. Understandable without color (Use error/warning icons instead of just showing red, yellow colors)
+9. Captions for video and audio
+10. Use WAI-ARIA only if necessary (semantic tags should always be considered before ARIA tags)
+
+
+=============
+Quick Testing
+=============
+1. Zoom to 400%
+2. Check Keyboard Navigation
+3. Close your eyes and use Screen Reader
+4. Run Lighthouse Accessibility Audit
+5. Deactivate CSS
+
+
+========================
+How to fix accessibility
+========================
+Problem: If you use <div> instead of <button>: [IMG:17]
+VoiceOver wont recognise the div as button. So give <div role="button">
+But still by tabbing it wont focus on div. So you give it as <div role="button" tabIndex="0">, then it will get focused on tabbing with tabIndex="0"
+Still we have a problem, which is on focus if we press space onClick wont work. For this you use onKeyUp event on element
+Use aria-label to describe the button
+
+**Note: Sometimes in Lighthouse (after fixing all Accessibility issues) it may show 100% but dont just blindly go with it. Do manual testing. Ex: If you give "outline: none", then Lighthouse Accessibility still shows 100% but when you test by tabbing, element wont get focused. Automation testing will not solve 100% problems always. So always do manual testing as well.
